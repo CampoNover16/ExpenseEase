@@ -1,4 +1,160 @@
 {% extends 'base.html' %}
 {% block body %}
-<h1>Hello there!</h1>
+<nav class="navbar navbar-expand-lg">
+    <div class="container-fluid">
+      <a class="navbar-logo" href="#">ExpenseEase</a>
+      <div class="d-flex float-end align-items-center nav-inv-section">
+        <div class="d-flex">
+          <div class="user-add" title="Add user"></div>
+          <span class="icon-desc">join</span>
+        </div>
+        <span class="divider">/</span>
+        <div class="d-flex">
+          <div class="user-join"></div>
+          <span class="icon-desc">invite</span>
+        </div>
+        
+        <div class="collapse navbar-collapse" id="navbarSupportedContent">
+          <ul class="navbar-nav">
+            <li class="nav-item dropdown">
+              <a class="nav-link user-settings" href="#" id="navbarDropdown" role="button" data-bs-toggle="dropdown" aria-expanded="false"></a>
+              <ul class="dropdown-menu" aria-labelledby="navbarDropdown">
+                <li><a class="dropdown-item" href="#">Action</a></li>
+                <li><a class="dropdown-item" href="#">Another action</a></li>
+                <li><hr class="dropdown-divider"></li>
+                <li><a class="dropdown-item" href="#">Something else here</a></li>
+              </ul>
+            </li>
+          </ul>
+        </div>
+        </ul> 
+      </div>
+    </div>
+</nav>
+<div class="d-flex flex-column">
+    <div class="d-flex justify-content-center">
+      <div class="graph-holder">
+        <div id="chartSpark1"></div>
+      </div>
+      <div class="graph-holder">
+        <div id="chartSpark2"></div>
+      </div>
+      <div class="graph-holder">
+        <div id="chartSpark3"></div>
+      </div>
+    </div>
+    <div class="d-flex justify-content-center">
+      <div class="graph-holder">
+        <div id="chartColumns"></div>
+      </div>
+      <div class="graph-holder">
+        <div id="chartDonut"></div>
+      </div>
+    </div>
+</div>
+
+<script>
+    var optionsColumns = {
+        chart: {
+            type: 'bar'
+        },
+        series: [{
+            name: 'sales',
+            data: [30,40,45,50,49,60,70,91,125]
+        }],
+        xaxis: {
+            categories: [1991,1992,1993,1994,1995,1996,1997, 1998,1999]
+        },
+        title: {
+          text: 'Example title',
+          offsetX: 0,
+          style: {
+            fontSize: '24px',
+            color:'#FFFFFF',
+          }
+        },
+    }
+
+    var optionsDonut = {
+          series: [44, 55, 41, 17, 15],
+          chart: {
+            type: 'donut',
+          },
+          responsive: [{
+            breakpoint: 480,
+            options: {
+              chart: {
+                width: 200
+              },
+              legend: {
+                position: 'bottom'
+              }
+            }
+          }],
+          title: {
+            text: 'Example title',
+            offsetX: 0,
+            style: {
+              fontSize: '24px',
+              color:'#FFFFFF',
+            }
+          },
+        };
+
+        var optionsSpark3 = {
+          series: [{
+          data: [30,40,45,50,49,60,70,91,125]
+        }],
+          chart: {
+          type: 'area',
+          height: 160,
+          sparkline: {
+            enabled: true
+          },
+        },
+        stroke: {
+          curve: 'straight'
+        },
+        fill: {
+          opacity: 0.3
+        },
+        xaxis: {
+          crosshairs: {
+            width: 1
+          },
+        },
+        yaxis: {
+          min: 0
+        },
+        title: {
+          text: '$135,965',
+          offsetX: 0,
+          style: {
+            fontSize: '24px',
+            color:'#FFFFFF',
+          }
+        },
+        subtitle: {
+          text: 'Profits',
+          offsetX: 0,
+          style: {
+            fontSize: '14px',
+            color:'#F5A623',
+          }
+        }
+        };
+
+    var chartSpark1 = new ApexCharts(document.querySelector("#chartSpark1"), optionsSpark3);
+    var chartSpark2 = new ApexCharts(document.querySelector("#chartSpark2"), optionsSpark3);
+    var chartSpark3 = new ApexCharts(document.querySelector("#chartSpark3"), optionsSpark3);
+    var chartColumns = new ApexCharts(document.querySelector("#chartColumns"), optionsColumns);
+    var chartDonut = new ApexCharts(document.querySelector("#chartDonut"), optionsDonut);
+
+    chartSpark1.render();
+    chartSpark2.render();
+    chartSpark3.render();
+    chartColumns.render();
+    chartDonut.render();
+
+</script>
 {% endblock %}

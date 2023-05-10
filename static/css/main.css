@@ -1,7 +1,99 @@
+:root {
+    --primary: #212121;
+    --secondary: #343434;
+    --accent: #F5A623;
+    --background-color: #121212;
+    --text-color: #FFFFFF;
+}
+
 body{
     margin: 0;
     padding: 0;
+    background-color: var(--background-color) !important;
+    color: var(--text-color) !important;
 }
-h1{
-    color: red;
+
+.navbar{
+    background-color: var(--primary) !important;
+}
+
+.graph-holder{
+    width: 50%;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+}
+
+#chartDonut, #chartColumns {
+    width: 600px;
+    background-color: var(--primary);
+    margin: 25px;
+    padding: 25px;
+    height: 475px;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    border-radius: 15px;
+}
+#chartSpark1, #chartSpark2, #chartSpark3{
+    margin: 25px;
+    padding: 25px;
+    width: auto;
+    height: auto;
+    background-color: var(--primary);
+    border-radius: 15px;
+}
+
+.navbar-logo {
+    padding-bottom: 0.3125rem;
+    margin-left: 0.5rem;
+    font-size: 1.25rem;
+    text-decoration: none;
+    white-space: nowrap;
+    color: var(--text-color);
+    font-weight: 600;
+}
+
+.nav-inv-section{
+    color: var(--text-color);
+}
+
+.nav-inv-section .divider{
+    font-size: 24px;
+    margin: 0px 5px;
+}
+
+.nav-inv-section .icon-desc{
+    margin: 0px 5px;
+}
+
+.nav-inv-section .user-settings{
+    background-image: url('../images/settings-icon.svg');
+    background-repeat: no-repeat;
+    background-size: contain;
+    width: 40px;
+    height: 40px;
+    margin-left: 15px;
+}
+
+.nav-inv-section .dropdown-menu[data-bs-popper] {
+    right: 0 !important;
+    left: unset !important;
+}
+
+
+.nav-inv-section .user-add{
+    background-image: url('../images/circle-plus-icon.svg');
+}
+
+.nav-inv-section .user-join{
+    background-image: url('../images/users-icon.svg');
+}
+
+.user-add,
+.user-join{
+    background-repeat: no-repeat;
+    background-size: contain;
+    width: 25px;
+    height: 25px;
 }

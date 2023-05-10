@@ -1,8 +1,8 @@
 # ExpenseEase
-It's coursework for PTN lectures in PJATK. This web application is dedicated to helping you manage your expenses and take control of your finances! <br /><br />
+It's coursework for PTN lectures in PJATK. This web application is dedicated to helping you manage your expenses and take control of your finances! <br />
 
 Our website offers a range of tools and resources to help you stay on top of your expenses, including budget tracking tools, expense categories, and spending reports.
-You can easily add your income and expenses to our system, categorize them, and view detailed reports on your spending habits.<br /><br />
+You can easily add your income and expenses to our system, categorize them, and view detailed reports on your spending habits.<br />
 
 Our goal is to empower you to make smarter financial choices and achieve your financial goals. Whether you're looking to save for a down payment on a house, pay off debt, or simply want to have a better understanding of your spending, we're here to help. 
 
@@ -34,7 +34,7 @@ pip install Flask
 
 And after that your project is ready to run. To make that simply run command
 ```pip
-python -m flask run
+python app.py
 ```
 
 ## Credits
