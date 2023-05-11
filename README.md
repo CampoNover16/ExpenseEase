@@ -32,6 +32,11 @@ To install flask
 pip install Flask
 ```
 
+To install mysql for flask
+```pip
+pip install flask_mysqldb
+```
+
 And after that your project is ready to run. To make that simply run command
 ```pip
 python app.py
