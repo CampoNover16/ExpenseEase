@@ -54,6 +54,10 @@ body{
     font-weight: 600;
 }
 
+.navbar-logo:hover {
+    color: var(--accent);
+}
+
 .nav-inv-section{
     color: var(--text-color);
 }
@@ -76,6 +80,31 @@ body{
     margin-left: 15px;
 }
 
+.nav-inv-section .user-avatar{
+    background-image: url('../images/avatar.jpg');
+    background-repeat: no-repeat;
+    background-size: contain;
+    border-radius: 45px;
+    width: 40px;
+    height: 40px;
+    margin: 0px 15px;
+}
+
+.nav-inv-section .dropdown-menu {
+    background-color: var(--primary);
+    color: var(--text-color);
+    border: 1px solid var(--secondary);
+}
+
+.nav-inv-section .dropdown-item {
+    color: var(--text-color);
+}
+
+.nav-inv-section .dropdown-item:focus,.nav-inv-section .dropdown-item:hover {
+    color: var(--text-color);
+    background-color: var(--accent);
+}
+
 .nav-inv-section .dropdown-menu[data-bs-popper] {
     right: 0 !important;
     left: unset !important;
@@ -96,4 +125,23 @@ body{
     background-size: contain;
     width: 25px;
     height: 25px;
+}
+
+.add-btn:hover,
+.join-btn:hover{
+    cursor: pointer;
+    pointer-events: all;
+    color: var(--accent);
+}
+
+.login-form,
+.register-form{
+    height: 500px;
+    width: 500px;
+    position: absolute;
+    display: flex;
+    flex-direction: column;
+    gap: 25px;
+    margin-left: 25px;
+    transform: translateY(50%);
 }

@@ -4,14 +4,18 @@
     <div class="container-fluid">
       <a class="navbar-logo" href="#">ExpenseEase</a>
       <div class="d-flex float-end align-items-center nav-inv-section">
-        <div class="d-flex">
+        <div class="d-flex add-btn">
           <div class="user-add" title="Add user"></div>
           <span class="icon-desc">join</span>
         </div>
         <span class="divider">/</span>
-        <div class="d-flex">
+        <div class="d-flex join-btn">
           <div class="user-join"></div>
           <span class="icon-desc">invite</span>
+        </div>
+        <div class="d-flex align-items-center" style="border-left: 2px solid var(--secondary); margin-left: 15px;">
+          <div class="user-avatar"></div>
+          <span>{{user}}</span>
         </div>
         
         <div class="collapse navbar-collapse" id="navbarSupportedContent">

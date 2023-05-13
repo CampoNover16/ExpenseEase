@@ -37,6 +37,11 @@ To install mysql for flask
 pip install flask_mysqldb
 ```
 
+To install session
+```pip
+pip install Flask-Session
+```
+
 And after that your project is ready to run. To make that simply run command
 ```pip
 python app.py
