@@ -4,6 +4,7 @@
     <div class="container-fluid">
       <a class="navbar-logo" href="#">ExpenseEase</a>
       <div class="d-flex float-end align-items-center nav-inv-section">
+        {% if board: %}
         <div class="d-flex add-btn">
           <div class="user-add" title="Add user"></div>
           <span class="icon-desc">join</span>
@@ -13,6 +14,7 @@
           <div class="user-join"></div>
           <span class="icon-desc">invite</span>
         </div>
+        {% endif %}
         <div class="d-flex align-items-center" style="border-left: 2px solid var(--secondary); margin-left: 15px;">
           <div class="user-avatar"></div>
           <span>{{user}}</span>
@@ -35,7 +37,8 @@
       </div>
     </div>
 </nav>
-<div class="d-flex flex-column">
+{% if board: %}
+  <div class="d-flex flex-column">
     <div class="d-flex justify-content-center">
       <div class="graph-holder">
         <div id="chartSpark1"></div>
@@ -55,8 +58,27 @@
         <div id="chartDonut"></div>
       </div>
     </div>
-</div>
-
+  </div>
+{% else %}
+  <div class="entry-layout d-flex">
+    <div class="d-flex join-box flex-column justify-content-center">
+      <h1>JOIN</h1>
+      <p class="box-description">If you do not want to create your own spending board, you can use a code received from a friend to <span style="color:var(--accent)">JOIN</span> his board and plan your expenses together, control your budget and set your dream goals.</p>
+      <p>
+        <div class="form-group d-flex flex-column justify-content-center" style="align-items: center;">
+          <label for="code"><strong style="color:var(--accent)">Enter code from your friend</strong><br>(the code should be 6 characters long)</label>
+          <input style="width: 100px; text-align: center; margin-top: 10px;" type="text" name="code" class="form-control" placeholder="Enter code here" maxlength="6">
+        </div>
+      </p>
+      <button style="margin-top:20px" type="button" class="btn btn-primary btn-lg">JOIN</button>
+    </div>
+    <div class="d-flex create-box flex-column justify-content-center">
+      <h1>CREATE</h1>
+      <p class="box-description"><span style="color:var(--accent)">CREATE</span> your spending dashboard that will help you plan your future as well as current expenses, control your budget, set your dream goals as well as compare the results of previous months.</p>
+      <button type="button" class="btn btn-primary btn-lg">CREATE</button>
+    </div>
+  </div>
+{% endif %}
 <script>
     var optionsColumns = {
         chart: {

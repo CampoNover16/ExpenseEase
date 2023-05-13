@@ -20,7 +20,14 @@ mysql = MySQL(app)
 def index():
     if not session.get("login"):
         return redirect("/login")
-    return render_template('index.html', user=session['login'])
+    else:
+        cursor = mysql.connection.cursor()
+        print(session.get("user_id"))
+        cursor.execute("SELECT * FROM boards WHERE user_id=%s",(session.get("user_id"),))
+        user_board = cursor.fetchone()
+        mysql.connection.commit()
+        cursor.close()
+    return render_template('index.html', user=session['login'], board=user_board)
 
 @app.route('/register', methods=['POST', 'GET'])
 def register():
@@ -42,18 +49,20 @@ def register():
     return render_template('register.html')
 
 @app.route('/login', methods=['GET','POST'])
-def login():   
+def login():
     if request.method == 'POST':
         login = request.form['login']
         password = request.form['password']
         cursor = mysql.connection.cursor()
-        user = cursor.execute("SELECT login, password FROM users WHERE login=%s AND password=%s",(login,password))
+        cursor.execute("SELECT id, login FROM users WHERE login=%s AND password=%s",(login,password))
+        user = cursor.fetchone()
         cursor.close()
         if user:
-            session["login"] = request.form['login']
+            session["user_id"] = user[0]
+            session["login"] = user[1]
             return redirect('/')
         else:
-            flash('Account with given data exists!', 'danger')
+            flash('Given data are incorrect. Try again!', 'danger')
     return render_template('login.html')
 
 @app.route('/logout')

@@ -110,7 +110,6 @@ body{
     left: unset !important;
 }
 
-
 .nav-inv-section .user-add{
     background-image: url('../images/circle-plus-icon.svg');
 }
@@ -144,4 +143,30 @@ body{
     gap: 25px;
     margin-left: 25px;
     transform: translateY(50%);
+}
+
+.entry-layout{
+    height: 90vh;
+}
+
+.entry-layout .join-box,
+.entry-layout .create-box{
+    width: 50%;
+    text-align: center;
+    align-items: center;
+}
+
+.entry-layout .box-description{
+    font-size: 1.5rem; 
+    padding: 15px;
+    width: 50%;
+}
+
+.join-box:before {
+    content: "";
+    position: absolute;
+    left: 50%;
+    height: 75%;
+    width: 0;
+    border-left: 2px solid var(--accent);
 }
