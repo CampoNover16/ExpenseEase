@@ -1,5 +1,15 @@
 {% extends 'base.html' %}
 {% block body %}
+{% with messages = get_flashed_messages(with_categories=true) %}
+  {% if messages %}
+    {% for category, message in messages %}
+      <div class="alert alert-{{ category }} alert-dismissible" role="alert">
+        <button type="button" class="btn-close" data-bs-dismiss="alert" aria-label="Close"></button>
+        <strong>{{ message }}</strong>
+      </div>
+    {% endfor %}
+  {% endif %}
+{% endwith %}
 <form action="/register" class="register-form" method="POST">
     <h1>REGISTER FORM</h1>
     <div class="form-group">
