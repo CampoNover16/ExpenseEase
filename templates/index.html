@@ -17,7 +17,7 @@
         {% endif %}
         <div class="d-flex align-items-center" style="border-left: 2px solid var(--secondary); margin-left: 15px;">
           <div class="user-avatar"></div>
-          <span>{{user}}</span>
+          <span>{{user['login']}}</span>
         </div>
         
         <div class="collapse navbar-collapse" id="navbarSupportedContent">
@@ -67,18 +67,59 @@
       <p>
         <div class="form-group d-flex flex-column justify-content-center" style="align-items: center;">
           <label for="code"><strong style="color:var(--accent)">Enter code from your friend</strong><br>(the code should be 6 characters long)</label>
-          <input style="width: 100px; text-align: center; margin-top: 10px;" type="text" name="code" class="form-control" placeholder="Enter code here" maxlength="6">
+          <input id="givenBoardCode" style="width: 100px; text-align: center; margin-top: 10px;" type="text" name="code" class="form-control" placeholder="Enter code here" maxlength="6">
         </div>
       </p>
-      <button style="margin-top:20px" type="button" class="btn btn-primary btn-lg">JOIN</button>
+      <button id="join_board_btn" type="button" class="btn btn-primary btn-lg" style="margin-top:20px">JOIN</button>
     </div>
     <div class="d-flex create-box flex-column justify-content-center">
       <h1>CREATE</h1>
       <p class="box-description"><span style="color:var(--accent)">CREATE</span> your spending dashboard that will help you plan your future as well as current expenses, control your budget, set your dream goals as well as compare the results of previous months.</p>
-      <button type="button" class="btn btn-primary btn-lg">CREATE</button>
+      <button id="create_board_btn" type="button" class="btn btn-primary btn-lg">CREATE</button>
     </div>
   </div>
 {% endif %}
+<script>
+  document.getElementById('create_board_btn').addEventListener('click', function(e){
+    e.preventDefault();
+    createUserBoard()
+  });
+
+  document.getElementById('join_board_btn').addEventListener('click', function(e){
+    e.preventDefault();
+    joinUserBoard();
+  });
+
+  function joinUserBoard(){
+    var givenBoardCode = document.getElementById('givenBoardCode').value;
+    var data = {
+      boardCode: givenBoardCode
+    }
+    const url1 = {{ url_for("joinBoard")|tojson }};
+    fetch(url1, {
+      method: "POST",
+      headers: {"Content-Type": "application/json"},
+      body: JSON.stringify(data),
+      cache: "no-cache"
+    }).then(() => {
+      //TO DO
+      //add flash message that succesfully joined and after let's say 5 sec page will be reloaded
+      // window.location.reload();
+    });
+  }
+
+  function createUserBoard(){
+    const url = {{ url_for("createBoard")|tojson }};
+    fetch(url, {
+      method: "GET",
+      headers: {"Content-Type": "application/json"},
+    }).then(() => {
+      //TO DO
+      //add flash message that succesfully created and after let's say 5 sec page will be reloaded
+      window.location.reload();
+    });
+  }
+</script>
 <script>
     var optionsColumns = {
         chart: {
