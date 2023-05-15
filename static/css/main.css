@@ -27,7 +27,7 @@ body{
 #chartDonut, #chartColumns {
     width: 600px;
     background-color: var(--primary);
-    margin: 25px;
+    margin: 15px;
     padding: 25px;
     height: 475px;
     display: flex;
@@ -169,4 +169,25 @@ body{
     height: 75%;
     width: 0;
     border-left: 2px solid var(--accent);
+}
+
+.add-expense{
+    background-color: var(--secondary);
+    height: 75px;
+    width: 200px;
+    border-radius: 15px;
+    color: var(--text-color);
+    font-size: 1.5rem; 
+    text-align: center;
+    font-weight: 600;
+}
+
+.modal-content {
+    -webkit-border-radius: 15px !important;
+    -moz-border-radius: 15px !important;
+    border-radius: 15px !important; 
+}
+
+.modal-header,.modal-body,.modal-footer{
+    background-color: var(--secondary);
 }

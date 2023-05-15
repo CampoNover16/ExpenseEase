@@ -50,10 +50,11 @@
         <div id="chartSpark3"></div>
       </div>
     </div>
-    <div class="d-flex justify-content-center">
+    <div class="d-flex justify-content-center align-items-center">
       <div class="graph-holder">
         <div id="chartColumns"></div>
       </div>
+      <button type="button" class="add-expense " data-bs-toggle="modal" data-bs-target="#modalCenter">Add Expense</button>
       <div class="graph-holder">
         <div id="chartDonut"></div>
       </div>
@@ -79,6 +80,42 @@
     </div>
   </div>
 {% endif %}
+<!-- Modal -->
+<div class="modal fade" id="modalCenter" tabindex="-1" role="dialog" aria-labelledby="modalCenterTitle" aria-hidden="true">
+  <div class="modal-dialog modal-dialog-centered" role="document">
+    <div class="modal-content" id="modalContent">
+      <div class="modal-header">
+        <h5 class="modal-title" id="modalLongTitle">Modal title</h5>
+      </div>
+      <div class="modal-body">
+        <form>
+          <div class="form-group">
+            <label for="expense-name" class="col-form-label">Expense:</label>
+            <input type="text" class="form-control" id="expense-name">
+          </div>
+          <div class="form-group">
+            <label for="expense-price" class="col-form-label">Price:</label>
+            <input type="number" class="form-control" id="expense-price">
+          </div>
+            <div class="form-group">
+              <label for="categorySelect">Example select</label>
+                <select class="form-control" id="categorySelect">
+                  <option>1</option>
+                  <option>2</option>
+                  <option>3</option>
+                  <option>4</option>
+                  <option>5</option>
+                </select>
+            </div>
+        </form>
+      </div>
+      <div class="modal-footer">
+        <button type="button" class="btn btn-secondary" data-dismiss="modal">Close</button>
+        <button type="button" class="btn btn-primary">Save changes</button>
+      </div>
+    </div>
+  </div>
+</div>
 <script>
     var optionsColumns = {
         chart: {
@@ -170,6 +207,8 @@
         }
         };
 
+  document.getElementById("modalCenter").addEventListener("shown.bs.modal", function (event) {
+  });
     var chartSpark1 = new ApexCharts(document.querySelector("#chartSpark1"), optionsSpark3);
     var chartSpark2 = new ApexCharts(document.querySelector("#chartSpark2"), optionsSpark3);
     var chartSpark3 = new ApexCharts(document.querySelector("#chartSpark3"), optionsSpark3);
