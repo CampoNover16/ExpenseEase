@@ -90,6 +90,24 @@ body{
     margin: 0px 15px;
 }
 
+.nav-inv-section .users-board-holder{
+    padding-left: 15px; 
+    border-left: 2px solid var(--secondary);
+}
+
+.nav-inv-section .users-board{
+    margin-left: unset;
+} 
+
+.nav-inv-section .users-board.active{
+    border: 1px solid var(--accent);
+}  
+
+.nav-inv-section .users-board:hover{
+    cursor: pointer;
+    border: 1px solid var(--accent);
+}   
+
 .nav-inv-section .dropdown-menu {
     background-color: var(--primary);
     color: var(--text-color);

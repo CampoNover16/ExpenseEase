@@ -19,15 +19,21 @@ mysql = MySQL(app)
 
 @app.route('/')
 def index():
+    users = 1
     if not session.get("login"):
         return redirect("/login")
     else:
         cursor = mysql.connection.cursor()
         cursor.execute("SELECT * FROM boards JOIN board_users ON boards.id=board_users.board_id WHERE board_users.user_id=%s",(session.get("user_id"),))
         user_board = cursor.fetchone()
+        if user_board:
+            cursor.execute("SELECT login FROM users JOIN board_users ON users.id = board_users.user_id WHERE board_users.board_id=%s and login!=%s",(user_board[0],session.get("login")))
+            second_user = cursor.fetchone()
+            users += 1
         mysql.connection.commit()
         cursor.close()
-    return render_template('index.html', user=session, board=user_board)
+        print(second_user)
+    return render_template('index.html', user=session, board=user_board, second_user = second_user, users_count = users)
 
 @app.route('/register', methods=['POST', 'GET'])
 def register():

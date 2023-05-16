@@ -3,8 +3,9 @@
 <nav class="navbar navbar-expand-lg">
     <div class="container-fluid">
       <a class="navbar-logo" href="#">ExpenseEase</a>
+      <div class="d-flex justify-content-center" style="font-weight: 600;">{{board[1]}}</div>
       <div class="d-flex float-end align-items-center nav-inv-section">
-        {% if board: %}
+        {% if board and users_count==1: %}
         <div class="d-flex add-btn">
           <div class="user-add" title="Add user"></div>
           <span class="icon-desc">join</span>
@@ -14,8 +15,14 @@
           <div class="user-join"></div>
           <span class="icon-desc">invite</span>
         </div>
+        {% elif board and users_count==2: %}
+        <div class="d-flex users-board-holder"> 
+            <div class="d-flex">
+                <div class="user-avatar users-board" title="{{second_user[0]}}"></div>
+            </div>
+        </div>
         {% endif %}
-        <div class="d-flex align-items-center" style="border-left: 2px solid var(--secondary); margin-left: 15px;">
+        <div class="d-flex align-items-center" style="border-left: 2px solid var(--secondary);">
           <div class="user-avatar"></div>
           <span>{{user['login']}}</span>
         </div>
