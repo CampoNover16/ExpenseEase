@@ -204,8 +204,13 @@ body{
     -webkit-border-radius: 15px !important;
     -moz-border-radius: 15px !important;
     border-radius: 15px !important; 
+    background-color: var(--secondary) !important;
 }
 
-.modal-header,.modal-body,.modal-footer{
-    background-color: var(--secondary);
+.modal-header{
+    border-bottom: none !important;
+}
+
+.modal-footer{
+    border-top: none !important; 
 }

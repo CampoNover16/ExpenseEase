@@ -91,11 +91,11 @@
 <div class="modal fade" id="modalCenter" tabindex="-1" role="dialog" aria-labelledby="modalCenterTitle" aria-hidden="true">
   <div class="modal-dialog modal-dialog-centered" role="document">
     <div class="modal-content" id="modalContent">
-      <div class="modal-header">
-        <h5 class="modal-title" id="modalLongTitle">Modal title</h5>
+      <div class="modal-header d-flex align-items-center justify-content-center">
+        <h5 class="modal-title" id="modalLongTitle">Add Expense</h5>
       </div>
       <div class="modal-body">
-        <form>
+        <form id="add-expense-form">
           <div class="form-group">
             <label for="expense-name" class="col-form-label">Expense:</label>
             <input type="text" class="form-control" id="expense-name">
@@ -105,8 +105,8 @@
             <input type="number" class="form-control" id="expense-price">
           </div>
             <div class="form-group">
-              <label for="categorySelect">Example select</label>
-                <select class="form-control" id="categorySelect">
+              <label for="expense-category" class="col-form-label">Category:</label>
+                <select class="form-control" id="expense-category">
                   <option>1</option>
                   <option>2</option>
                   <option>3</option>
@@ -114,16 +114,45 @@
                   <option>5</option>
                 </select>
             </div>
+          <div class="form-group">
+            <label for="expense-date" class="col-form-label">Date:</label>
+            <input type="date" class="form-control" id="expense-date">
+          </div>
         </form>
       </div>
       <div class="modal-footer">
-        <button type="button" class="btn btn-secondary" data-dismiss="modal">Close</button>
-        <button type="button" class="btn btn-primary">Save changes</button>
+        <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Close</button>
+        <button type="submit" form="add-expense-form" class="btn btn-primary" data-bs-dismiss="modal">Save changes</button>
       </div>
     </div>
   </div>
 </div>
 <script>
+  var modal = document.getElementById("modalCenter");
+  var addExpenseForm = document.getElementById("add-expense-form");
+
+  function addExpenseFormHandler(){
+    var name = document.getElementById("expense-name").value;
+    var price = document.getElementById("expense-price").value;
+    var category = document.getElementById("expense-category").value;
+    var date = document.getElementById("expense-date").value;
+    
+    var addExpenseData = {
+      name,
+      price,
+      category,
+      date,
+    }
+
+    console.log(addExpenseData);
+  }
+
+  addExpenseForm.addEventListener("submit", function(e){
+    e.preventDefault();
+    addExpenseFormHandler();
+    addExpenseForm.reset();
+  })
+
   document.getElementById('create_board_btn').addEventListener('click', function(e){
     e.preventDefault();
     createUserBoard()
@@ -255,8 +284,7 @@
         }
         };
 
-  document.getElementById("modalCenter").addEventListener("shown.bs.modal", function (event) {
-  });
+
     var chartSpark1 = new ApexCharts(document.querySelector("#chartSpark1"), optionsSpark3);
     var chartSpark2 = new ApexCharts(document.querySelector("#chartSpark2"), optionsSpark3);
     var chartSpark3 = new ApexCharts(document.querySelector("#chartSpark3"), optionsSpark3);

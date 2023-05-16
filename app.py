@@ -114,6 +114,13 @@ def createBoard():
             message = 'Something went wrong!'
         cursor.close()
     return {"message": message}
+@app.route('/addExpense', methods=['POST','GET'])
+def addExpense():
+    user_id = session.get("user_id")
+    message = None
+    req = request.get_json()
+
+    return {"message": message}
 
 @app.route('/logout')
 def logout():    
