@@ -144,6 +144,17 @@
       date,
     }
 
+    const url1 = {{ url_for("addExpense")|tojson }};
+    fetch(url1, {
+      method: "POST",
+      headers: {"Content-Type": "application/json"},
+      body: JSON.stringify(addExpenseData),
+      cache: "no-cache"
+    }).then(() => {
+      //TO DO
+      //message
+    });
+
     console.log(addExpenseData);
   }
 

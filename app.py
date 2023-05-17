@@ -1,7 +1,7 @@
 from flask import Flask, render_template, request, redirect, url_for, session, flash
 from flask_session import Session
 from flask_mysqldb import MySQL
-from datetime import datetime
+from datetime import datetime,date
 import string, random
 
 app = Flask(__name__)
@@ -114,13 +114,22 @@ def createBoard():
             message = 'Something went wrong!'
         cursor.close()
     return {"message": message}
+
 @app.route('/addExpense', methods=['POST','GET'])
 def addExpense():
     user_id = session.get("user_id")
     message = None
+    createDate = datetime.now()
     req = request.get_json()
-
+    year, month, day = str(req['date']).split("-")
+    if session.get("login"):
+       cursor = mysql.connection.cursor() 
+       cursor.execute("SELECT `board_id` FROM `board_users` WHERE `user_id`=%s",(user_id,))
+       userboardId = cursor.fetchone()
+       cursor.execute("INSERT INTO `board_data`(`board_id`, `param`, `value`, `day`, `month`, `year`, `created`, `modified`) VALUES (%s,%s,%s,%s,%s,%s,%s,%s)",(userboardId[0],req['name'],req['price'],day,month,year,createDate,createDate))
+       mysql.connection.commit()
     return {"message": message}
+
 
 @app.route('/logout')
 def logout():    
