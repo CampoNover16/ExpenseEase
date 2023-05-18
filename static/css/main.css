@@ -238,3 +238,9 @@ body{
 /* #notification-box{
     display: none;
 } */
+
+.all-expenses-box{
+    height: 400px;
+    width: 100%;
+    background-color: red;
+}

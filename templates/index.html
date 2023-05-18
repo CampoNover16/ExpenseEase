@@ -66,6 +66,9 @@
         <div id="chartDonut"></div>
       </div>
     </div>
+    <div class="all-expenses-box">
+      <button id="load-data">Load</button>
+    </div>
   </div>
 {% else %}
   <div class="entry-layout d-flex">
@@ -122,7 +125,7 @@
       </div>
       <div class="modal-footer">
         <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Close</button>
-        <button type="submit" form="add-expense-form" class="btn btn-primary" data-bs-dismiss="modal">Save changes</button>
+        <button type="submit" form="add-expense-form" class="btn btn-primary" data-bs-dismiss="modal" id="sub-btn">Save changes</button>
       </div>
     </div>
   </div>
@@ -164,17 +167,56 @@
   </div>
 </div>
 <script>
-  var modal = document.getElementById("modalCenter");
-  var addExpenseForm = document.getElementById("add-expense-form");
-  modal.addEventListener('shown.bs.modal', function () {
-    var nameInput = document.getElementById("expense-name");
-    var priceInput = document.getElementById("expense-price");
-    var categoryInput = document.getElementById("expense-category");
-    var dateInput = document.getElementById("expense-date");
-})
-  document.getElementById('expense-date').valueAsDate = new Date();
-  .addEventListener( "blur" , function() { } );
+  const loadBtn = document.getElementById("load-data");
+  const modal = document.getElementById("modalCenter");
+  const addExpenseForm = document.getElementById("add-expense-form");
 
+  loadBtn.addEventListener("click", function () {
+    loadAllData();
+  })
+
+  modal.addEventListener('shown.bs.modal', function () {
+    var isNameValid,isPriceValid,isCategoryValid,isDateValid,isFormValid = false;
+    document.getElementById('expense-date').valueAsDate = new Date();
+    const nameInput = document.getElementById("expense-name");
+    const priceInput = document.getElementById("expense-price");
+    const btn = document.getElementById("sub-btn");
+    btn.disabled = true;
+
+    nameInput.addEventListener( "blur" , function() {
+      if (nameInput.value != ''){
+        isNameValid = true;
+        if(isNameValid && isPriceValid ){
+        btn.disabled = false;
+        }
+
+      }
+     } );
+     priceInput.addEventListener( "blur" , function() {
+      if (priceInput.value != ''){
+        isPriceValid = true;
+        if(isNameValid && isPriceValid ){
+        btn.disabled = false;
+        }
+
+      }
+     } );
+
+
+})
+
+  function loadAllData(){
+    console.log("DUPA");
+    const urllol = {{ url_for("getAllExpenses")|tojson }};
+    fetch(urllol, {
+      method: "GET",
+      headers: {"Content-Type": "application/json"},
+    }).then(() => {
+      //TO DO
+      //message
+      // window.location.reload();
+    });
+  }
 
   function showAlertInfo(msg,category,modalId){
     var navbar = document.getElementById('navbar');
@@ -221,8 +263,8 @@
       date,
     }
 
-    const url1 = {{ url_for("addExpense")|tojson }};
-    fetch(url1, {
+    const url10 = {{ url_for("addExpense")|tojson }};
+    fetch(url10, {
       method: "POST",
       headers: {"Content-Type": "application/json"},
       body: JSON.stringify(addExpenseData),
