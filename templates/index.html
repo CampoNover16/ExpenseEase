@@ -98,15 +98,15 @@
         <form id="add-expense-form">
           <div class="form-group">
             <label for="expense-name" class="col-form-label">Expense:</label>
-            <input type="text" class="form-control" id="expense-name">
+            <input type="text" class="form-control" id="expense-name" required>
           </div>
           <div class="form-group">
             <label for="expense-price" class="col-form-label">Price:</label>
-            <input type="number" class="form-control" id="expense-price">
+            <input type="number" class="form-control" id="expense-price" required>
           </div>
             <div class="form-group">
               <label for="expense-category" class="col-form-label">Category:</label>
-                <select class="form-control" id="expense-category">
+                <select class="form-control" id="expense-category" required>
                   <option>1</option>
                   <option>2</option>
                   <option>3</option>
@@ -116,7 +116,7 @@
             </div>
           <div class="form-group">
             <label for="expense-date" class="col-form-label">Date:</label>
-            <input type="date" class="form-control" id="expense-date">
+            <input type="date" class="form-control" id="expense-date" required>
           </div>
         </form>
       </div>
@@ -130,6 +130,15 @@
 <script>
   var modal = document.getElementById("modalCenter");
   var addExpenseForm = document.getElementById("add-expense-form");
+  modal.addEventListener('shown.bs.modal', function () {
+    var nameInput = document.getElementById("expense-name");
+    var priceInput = document.getElementById("expense-price");
+    var categoryInput = document.getElementById("expense-category");
+    var dateInput = document.getElementById("expense-date");
+})
+  document.getElementById('expense-date').valueAsDate = new Date();
+  .addEventListener( "blur" , function() { } );
+
 
   function addExpenseFormHandler(){
     var name = document.getElementById("expense-name").value;
