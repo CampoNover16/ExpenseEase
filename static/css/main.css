@@ -207,10 +207,34 @@ body{
     background-color: var(--secondary) !important;
 }
 
-.modal-header{
+/* .modal-header{
     border-bottom: none !important;
-}
+} */
 
 .modal-footer{
     border-top: none !important; 
 }
+
+#invitationCodeModal{
+    text-align: center;
+}
+
+#invitationCodeModal .modal-body{
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    gap: 15px;
+}
+
+#invitationCodeModal .modal-body input{
+    text-align: center;
+    width: 100px;
+}
+#invitationCodeModal .modal-footer{
+    display: flex;
+    justify-content: center;
+}
+
+/* #notification-box{
+    display: none;
+} */

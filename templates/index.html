@@ -1,17 +1,17 @@
 {% extends 'base.html' %}
 {% block body %}
-<nav class="navbar navbar-expand-lg">
+<nav id="navbar" class="navbar navbar-expand-lg">
     <div class="container-fluid">
       <a class="navbar-logo" href="#">ExpenseEase</a>
       <div class="d-flex justify-content-center" style="font-weight: 600;">{{board[1]}}</div>
       <div class="d-flex float-end align-items-center nav-inv-section">
         {% if board and users_count==1: %}
-        <div class="d-flex add-btn">
+        <div class="d-flex add-btn" data-bs-toggle="modal" data-bs-target="#joinWithCodeModal">
           <div class="user-add" title="Add user"></div>
           <span class="icon-desc">join</span>
         </div>
         <span class="divider">/</span>
-        <div class="d-flex join-btn">
+        <div class="d-flex join-btn" data-bs-toggle="modal" data-bs-target="#invitationCodeModal">
           <div class="user-join"></div>
           <span class="icon-desc">invite</span>
         </div>
@@ -127,9 +127,77 @@
     </div>
   </div>
 </div>
+<!-- invitation modal -->
+<div class="modal fade" id="invitationCodeModal" tabindex="-1" aria-labelledby="invitationCodeModal" aria-hidden="true">
+  <div class="modal-dialog">
+    <div class="modal-content">
+      <div class="modal-header">
+        <h5 class="modal-title">Invite people to your board!</h5>
+        <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+      </div>
+      <div class="modal-body">
+        <span>Down below you can find <strong style="color:var(--accent)">invite code</strong> to your board. Pass it to your friend and together keep track of your expenses!</span>
+        <input type="text" class="form-control inv-code" value="{{board[2]}}" readonly>
+      </div>
+      <div class="modal-footer">
+        <button type="button" onclick="copyInviteContent()" class="btn btn-primary">Copy to clipboard</button>
+      </div>
+    </div>
+  </div>
+</div>
+<!-- join modal -->
+<div class="modal fade" id="joinWithCodeModal" tabindex="-1" aria-labelledby="joinWithCodeModal" aria-hidden="true">
+  <div class="modal-dialog">
+    <div class="modal-content">
+      <div class="modal-header">
+        <h5 class="modal-title">Join to someone's board!</h5>
+        <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+      </div>
+      <div class="modal-body">
+        Down below enter valid 6 characters long code to join your friend's board and together keep track of your expenses!
+        <input type="text" class="form-control join-code" placeholder="Enter code here" maxlength="6">
+      </div>
+      <div class="modal-footer">
+        <button type="button" onclick="joinToBoard()" class="btn btn-primary">Join</button>
+      </div>
+    </div>
+  </div>
+</div>
 <script>
   var modal = document.getElementById("modalCenter");
   var addExpenseForm = document.getElementById("add-expense-form");
+
+  function showAlertInfo(msg,category,modalId){
+    var navbar = document.getElementById('navbar');
+    var html = '<div id="notification-box" class="alert alert-'+category+' alert-dismissible" role="alert">'+
+                '<button type="button" class="btn-close notification-close" data-bs-dismiss="alert" aria-label="Close"></button>'+
+                '<strong>'+msg+'</strong>'+
+                '</div>';
+
+    if(modalId){
+      let myModalEl = document.getElementById(modalId);
+      let modal = bootstrap.Modal.getInstance(myModalEl)
+      modal.hide();
+    }
+
+    navbar.insertAdjacentHTML("afterend", html);
+  }
+
+  function joinToBoard(){
+    var inv_code = document.getElementsByClassName('inv-code')[0].value
+    var join_code = document.getElementsByClassName('join-code')[0].value;
+    if(inv_code !== join_code){
+      joinUserBoard(join_code);
+    }else{
+      showAlertInfo('You cannot join to your own board!','danger','joinWithCodeModal');
+    }
+  }
+
+  function copyInviteContent(){
+    var inv_code = document.getElementsByClassName('inv-code')[0].value;
+    navigator.clipboard.writeText(inv_code);
+    showAlertInfo('Code was successfully copied!','success','invitationCodeModal');
+  }
 
   function addExpenseFormHandler(){
     var name = document.getElementById("expense-name").value;
@@ -169,15 +237,19 @@
     createUserBoard()
   });
 
-  document.getElementById('join_board_btn').addEventListener('click', function(e){
-    e.preventDefault();
-    joinUserBoard();
-  });
+  // document.getElementById('join_board_btn').addEventListener('click', function(e){
+  //   e.preventDefault();
+  //   joinUserBoard();
+  // });
 
-  function joinUserBoard(){
+  function starterJoinBoard(){
     var givenBoardCode = document.getElementById('givenBoardCode').value;
+    joinUserBoard(givenBoardCode);
+  }
+
+  function joinUserBoard(code){
     var data = {
-      boardCode: givenBoardCode
+      boardCode: code
     }
     const url1 = {{ url_for("joinBoard")|tojson }};
     fetch(url1, {
