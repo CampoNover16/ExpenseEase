@@ -89,10 +89,15 @@ def joinBoard():
         cursor.execute("SELECT * FROM boards JOIN board_users ON boards.id=board_users.board_id WHERE board_users.user_id=%s",(session.get("user_id"),))
         userBoardToDelete = cursor.fetchone()
         if userBoardToDelete:
-            # TO DO 
-            # Delete user from board and if it was only user drop board and all data
-            cursor.execute("DELETE FROM board_users WHERE board_users.user_id=%s and board_users.board_id=%s",(session.get("user_id"),userBoardToDelete[0]))
-            mysql.connection.commit()
+            cursor.execute("SELECT * FROM boards JOIN board_users ON boards.id=board_users.board_id WHERE board_users.board_id=%s",(userBoardToDelete[0],))
+            rows_affected = len(cursor.fetchall())
+            if rows_affected > 1:
+                cursor.execute("DELETE FROM board_users WHERE board_users.user_id=%s and board_users.board_id=%s",(session.get("user_id"),userBoardToDelete[0]))
+                mysql.connection.commit()
+            else:
+                cursor.execute("DELETE FROM board_data WHERE board_data.board_id=%s",(userBoardToDelete[0],))
+                cursor.execute("DELETE FROM board_users WHERE board_users.user_id=%s and board_users.board_id=%s",(session.get("user_id"),userBoardToDelete[0]))
+                cursor.execute("DELETE FROM boards WHERE boards.id=%s",(userBoardToDelete[0],))
         if checkUserBoard:
             cursor.execute("INSERT INTO board_users (board_id, user_id) VALUES(%s,%s)",(checkUserBoard[0], user_id))
             cursor.execute("UPDATE boards SET can_join=%s WHERE id=%s",(0,checkUserBoard[0]))

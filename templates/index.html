@@ -251,6 +251,9 @@
     var inv_code = document.getElementsByClassName('inv-code')[0].value
     var join_code = document.getElementsByClassName('join-code')[0].value;
     if(inv_code !== join_code){
+      let myModalEl = document.getElementById('joinWithCodeModal');
+      let modal = bootstrap.Modal.getInstance(myModalEl);
+      modal.hide();
       joinUserBoard(join_code);
     }else{
       showAlertInfo('You cannot join to your own board!','danger','joinWithCodeModal');
