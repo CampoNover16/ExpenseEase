@@ -238,3 +238,13 @@ body{
     display: flex;
     justify-content: center;
 }
+
+/* #notification-box{
+    display: none;
+} */
+
+.all-expenses-box{
+    height: 400px;
+    width: 100%;
+    background-color: red;
+}

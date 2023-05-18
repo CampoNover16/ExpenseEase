@@ -139,6 +139,23 @@ def addExpense():
        mysql.connection.commit()
     return {"message": message}
 
+@app.route('/getAllExpenses', methods=['POST','GET'])
+def getAllExpenses():
+    user_id = session.get("user_id")
+    message = None
+    if session.get("login"):
+        cursor = mysql.connection.cursor()
+        cursor.execute("SELECT `board_id` FROM `board_users` WHERE `user_id`=%s",(user_id,))
+        userboardId = cursor.fetchone()
+        cursor.execute("SELECT * FROM `board_data` WHERE `board_id`=%s",(userboardId[0],))
+        boardData = cursor.fetchall()
+        print(boardData)
+
+        mysql.connection.commit()
+
+
+    return {"message": message}
+
 @app.route('/logout')
 def logout():    
     session.pop('login', None)
