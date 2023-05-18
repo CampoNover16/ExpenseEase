@@ -207,10 +207,6 @@ body{
     background-color: var(--secondary) !important;
 }
 
-/* .modal-header{
-    border-bottom: none !important;
-} */
-
 .modal-footer{
     border-top: none !important; 
 }
@@ -233,18 +229,19 @@ body{
     text-align: center;
     width: 100px;
 }
+
 #invitationCodeModal .modal-footer,
 #joinWithCodeModal .modal-footer{
     display: flex;
     justify-content: center;
 }
 
-/* #notification-box{
-    display: none;
-} */
-
 .all-expenses-box{
     height: 400px;
     width: 100%;
     background-color: red;
+}
+
+.btn-close {
+    filter: invert(1);
 }

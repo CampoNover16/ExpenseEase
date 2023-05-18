@@ -92,6 +92,7 @@ def joinBoard():
             cursor.execute("SELECT * FROM boards JOIN board_users ON boards.id=board_users.board_id WHERE board_users.board_id=%s",(userBoardToDelete[0],))
             rows_affected = len(cursor.fetchall())
             if rows_affected > 1:
+                cursor.execute("UPDATE boards SET can_join=%s WHERE id=%s",(1,userBoardToDelete[0]))
                 cursor.execute("DELETE FROM board_users WHERE board_users.user_id=%s and board_users.board_id=%s",(session.get("user_id"),userBoardToDelete[0]))
                 mysql.connection.commit()
             else:
@@ -159,6 +160,20 @@ def getAllExpenses():
         mysql.connection.commit()
 
 
+    return {"message": message}
+
+@app.route('/saveUserBoardName', methods=['POST','GET'])
+def saveUserBoardName():
+    req = request.get_json()
+    message = None
+    if session.get("login"):
+        cursor = mysql.connection.cursor()
+        cursor.execute("SELECT * FROM boards JOIN board_users ON boards.id=board_users.board_id WHERE board_users.user_id=%s",(session.get("user_id"),))
+        userBoard = cursor.fetchone()
+        if userBoard:
+            cursor.execute("UPDATE boards SET name=%s WHERE id=%s",(req['newName'],userBoard[0]))
+            mysql.connection.commit()
+            cursor.close()
     return {"message": message}
 
 @app.route('/logout')

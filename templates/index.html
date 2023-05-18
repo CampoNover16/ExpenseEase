@@ -1,97 +1,78 @@
 {% extends 'base.html' %}
 {% block body %}
 <nav id="navbar" class="navbar navbar-expand-lg">
-    <div class="container-fluid">
-      <a class="navbar-logo" href="#" style="width: 20%;">ExpenseEase</a>
-      <div class="d-flex justify-content-center" style="font-weight: 600; width: 20%;">{{board[1]}}</div>
-      <div class="d-flex float-end align-items-center nav-inv-section">
-        {% if board and users_count==1: %}
-        <div class="d-flex" style="align-items: center; margin-right: 15px;">
-          <div class="d-flex add-btn" data-bs-toggle="modal" data-bs-target="#joinWithCodeModal">
-            <div class="user-add" title="Add user"></div>
-            <span class="icon-desc">join</span>
-          </div>
-          <span class="divider">/</span>
-          <div class="d-flex join-btn" data-bs-toggle="modal" data-bs-target="#invitationCodeModal">
-            <div class="user-join"></div>
-            <span class="icon-desc">invite</span>
-          </div>
+  <div class="container-fluid">
+    <a class="navbar-logo" href="#" style="width: 20%;">ExpenseEase</a>
+    <div class="d-flex justify-content-center userBoardName" style="font-weight: 600; width: 20%;">{{board[1]}}</div>
+    <div class="d-flex float-end align-items-center nav-inv-section">
+      {% if board and users_count==1: %}
+      <div class="d-flex" style="align-items: center; margin-right: 15px;">
+        <div class="d-flex add-btn" data-bs-toggle="modal" data-bs-target="#joinWithCodeModal">
+          <div class="user-add" title="Add user"></div>
+          <span class="icon-desc">join</span>
         </div>
-        {% elif board and users_count==2: %}
-        <div class="d-flex users-board-holder"> 
-            <div class="d-flex">
-                <div class="user-avatar users-board" title="{{second_user[0]}}"></div>
-            </div>
+        <span class="divider">/</span>
+        <div class="d-flex join-btn" data-bs-toggle="modal" data-bs-target="#invitationCodeModal">
+          <div class="user-join"></div>
+          <span class="icon-desc">invite</span>
         </div>
-        {% endif %}
-        <div class="d-flex align-items-center" style="border-left: 2px solid var(--secondary);">
-          <div class="user-avatar"></div>
-          <span>{{user['login']}}</span>
-        </div>
-        
-        <div class="collapse navbar-collapse" id="navbarSupportedContent">
-          <ul class="navbar-nav">
-            <li class="nav-item dropdown">
-              <a class="nav-link user-settings" href="#" id="navbarDropdown" role="button" data-bs-toggle="dropdown" aria-expanded="false"></a>
-              <ul class="dropdown-menu" aria-labelledby="navbarDropdown">
-                <li><a class="dropdown-item" href="#">Settings</a></li>
-                <li><a class="dropdown-item" href="#">FAQ</a></li>
-                <li><hr class="dropdown-divider"></li>
-                <li><a class="dropdown-item" href="/logout">Logout</a></li>
-              </ul>
-            </li>
-          </ul>
-        </div>
-        </ul> 
       </div>
+      {% elif board and users_count==2: %}
+      <div class="d-flex users-board-holder"> 
+          <div class="d-flex">
+              <div class="user-avatar users-board" title="{{second_user[0]}}"></div>
+          </div>
+      </div>
+      {% endif %}
+      <div class="d-flex align-items-center" style="border-left: 2px solid var(--secondary);">
+        <div class="user-avatar"></div>
+        <span>{{user['login']}}</span>
+      </div>
+      
+      <div class="collapse navbar-collapse" id="navbarSupportedContent">
+        <ul class="navbar-nav">
+          <li class="nav-item dropdown">
+            <a class="nav-link user-settings" href="#" id="navbarDropdown" role="button" data-bs-toggle="dropdown" aria-expanded="false"></a>
+            <ul class="dropdown-menu" aria-labelledby="navbarDropdown">
+              <li><a class="dropdown-item" href="#" data-bs-toggle="modal" data-bs-target="#userSettings">Settings</a></li>
+              <li><a class="dropdown-item" href="#">FAQ</a></li>
+              <li><hr class="dropdown-divider"></li>
+              <li><a class="dropdown-item" href="/logout">Logout</a></li>
+            </ul>
+          </li>
+        </ul>
+      </div>
+      </ul> 
     </div>
+  </div>
 </nav>
 {% if board: %}
-  <div class="d-flex flex-column">
-    <div class="d-flex justify-content-center">
-      <div class="graph-holder">
-        <div id="chartSpark1"></div>
-      </div>
-      <div class="graph-holder">
-        <div id="chartSpark2"></div>
-      </div>
-      <div class="graph-holder">
-        <div id="chartSpark3"></div>
-      </div>
+{% include 'user-settings.html' %}
+<div class="d-flex flex-column">
+  <div class="d-flex justify-content-center">
+    <div class="graph-holder">
+      <div id="chartSpark1"></div>
     </div>
-    <div class="d-flex justify-content-center align-items-center">
-      <div class="graph-holder">
-        <div id="chartColumns"></div>
-      </div>
-      <button type="button" class="add-expense " data-bs-toggle="modal" data-bs-target="#modalCenter">Add Expense</button>
-      <div class="graph-holder">
-        <div id="chartDonut"></div>
-      </div>
+    <div class="graph-holder">
+      <div id="chartSpark2"></div>
     </div>
-    <div class="all-expenses-box">
-      <button id="load-data">Load</button>
+    <div class="graph-holder">
+      <div id="chartSpark3"></div>
     </div>
   </div>
-{% else %}
-  <div class="entry-layout d-flex">
-    <div class="d-flex join-box flex-column justify-content-center">
-      <h1>JOIN</h1>
-      <p class="box-description">If you do not want to create your own spending board, you can use a code received from a friend to <span style="color:var(--accent)">JOIN</span> his board and plan your expenses together, control your budget and set your dream goals.</p>
-      <p>
-        <div class="form-group d-flex flex-column justify-content-center" style="align-items: center;">
-          <label for="code"><strong style="color:var(--accent)">Enter code from your friend</strong><br>(the code should be 6 characters long)</label>
-          <input id="givenBoardCode" style="width: 100px; text-align: center; margin-top: 10px;" type="text" name="code" class="form-control" placeholder="Enter code here" maxlength="6">
-        </div>
-      </p>
-      <button id="join_board_btn" type="button" class="btn btn-primary btn-lg" style="margin-top:20px">JOIN</button>
+  <div class="d-flex justify-content-center align-items-center">
+    <div class="graph-holder">
+      <div id="chartColumns"></div>
     </div>
-    <div class="d-flex create-box flex-column justify-content-center">
-      <h1>CREATE</h1>
-      <p class="box-description"><span style="color:var(--accent)">CREATE</span> your spending dashboard that will help you plan your future as well as current expenses, control your budget, set your dream goals as well as compare the results of previous months.</p>
-      <button id="create_board_btn" type="button" class="btn btn-primary btn-lg">CREATE</button>
+    <button type="button" class="add-expense " data-bs-toggle="modal" data-bs-target="#modalCenter">Add Expense</button>
+    <div class="graph-holder">
+      <div id="chartDonut"></div>
     </div>
   </div>
-{% endif %}
+  <div class="all-expenses-box">
+    <button id="load-data">Load</button>
+  </div>
+</div>
 <!-- Modal -->
 <div class="modal fade" id="modalCenter" tabindex="-1" role="dialog" aria-labelledby="modalCenterTitle" aria-hidden="true">
   <div class="modal-dialog modal-dialog-centered" role="document">
@@ -173,135 +154,49 @@
     </div>
   </div>
 </div>
+{% else %}
+<div class="entry-layout d-flex">
+  <div class="d-flex join-box flex-column justify-content-center">
+    <h1>JOIN</h1>
+    <p class="box-description">If you do not want to create your own spending board, you can use a code received from a friend to <span style="color:var(--accent)">JOIN</span> his board and plan your expenses together, control your budget and set your dream goals.</p>
+    <p>
+      <div class="form-group d-flex flex-column justify-content-center" style="align-items: center;">
+        <label for="code"><strong style="color:var(--accent)">Enter code from your friend</strong><br>(the code should be 6 characters long)</label>
+        <input id="givenBoardCode" style="width: 100px; text-align: center; margin-top: 10px;" type="text" name="code" class="form-control" placeholder="Enter code here" maxlength="6">
+      </div>
+    </p>
+    <button onclick="starterJoinBoard()" type="button" class="btn btn-primary btn-lg" style="margin-top:20px">JOIN</button>
+  </div>
+  <div class="d-flex create-box flex-column justify-content-center">
+    <h1>CREATE</h1>
+    <p class="box-description"><span style="color:var(--accent)">CREATE</span> your spending dashboard that will help you plan your future as well as current expenses, control your budget, set your dream goals as well as compare the results of previous months.</p>
+    <button onclick="createUserBoard()" type="button" class="btn btn-primary btn-lg">CREATE</button>
+  </div>
+</div>
+{% endif %}
 <script>
   const loadBtn = document.getElementById("load-data");
   const modal = document.getElementById("modalCenter");
   const addExpenseForm = document.getElementById("add-expense-form");
 
-  loadBtn.addEventListener("click", function () {
-    loadAllData();
-  })
-
-  modal.addEventListener('shown.bs.modal', function () {
-    var isNameValid,isPriceValid,isCategoryValid,isDateValid,isFormValid = false;
-    document.getElementById('expense-date').valueAsDate = new Date();
-    const nameInput = document.getElementById("expense-name");
-    const priceInput = document.getElementById("expense-price");
-    const btn = document.getElementById("sub-btn");
-    btn.disabled = true;
-
-    nameInput.addEventListener( "blur" , function() {
-      if (nameInput.value != ''){
-        isNameValid = true;
-        if(isNameValid && isPriceValid ){
-        btn.disabled = false;
-        }
-
-      }
-     } );
-     priceInput.addEventListener( "blur" , function() {
-      if (priceInput.value != ''){
-        isPriceValid = true;
-        if(isNameValid && isPriceValid ){
-        btn.disabled = false;
-        }
-
-      }
-     } );
-
-
-})
-
-  function loadAllData(){
-    console.log("DUPA");
-    const urllol = {{ url_for("getAllExpenses")|tojson }};
-    fetch(urllol, {
-      method: "GET",
-      headers: {"Content-Type": "application/json"},
-    }).then(() => {
-      //TO DO
-      //message
-      // window.location.reload();
-    });
-  }
-
   function showAlertInfo(msg,category,modalId){
     var navbar = document.getElementById('navbar');
     var alertBox = document.getElementById('notification-box'); 
-
-    if(alertBox){
-      alertBox.remove();
-    }
-
     var html = '<div id="notification-box" class="alert alert-'+category+' alert-dismissible" role="alert">'+
                 '<button type="button" class="btn-close notification-close" data-bs-dismiss="alert" aria-label="Close"></button>'+
                 '<strong>'+msg+'</strong>'+
                 '</div>';
 
+    if(alertBox){
+      alertBox.remove();
+    }
     if(modalId){
       let myModalEl = document.getElementById(modalId);
       let modal = bootstrap.Modal.getInstance(myModalEl);
       modal.hide();
     }
-
     navbar.insertAdjacentHTML("afterend", html);
   }
-
-  function joinToBoard(){
-    var inv_code = document.getElementsByClassName('inv-code')[0].value
-    var join_code = document.getElementsByClassName('join-code')[0].value;
-    if(inv_code !== join_code){
-      let myModalEl = document.getElementById('joinWithCodeModal');
-      let modal = bootstrap.Modal.getInstance(myModalEl);
-      modal.hide();
-      joinUserBoard(join_code);
-    }else{
-      showAlertInfo('You cannot join to your own board!','danger','joinWithCodeModal');
-    }
-  }
-
-  function copyInviteContent(){
-    var inv_code = document.getElementsByClassName('inv-code')[0].value;
-    navigator.clipboard.writeText(inv_code);
-    showAlertInfo('Code was successfully copied!','success','invitationCodeModal');
-  }
-
-  function addExpenseFormHandler(){
-    var name = document.getElementById("expense-name").value;
-    var price = document.getElementById("expense-price").value;
-    var category = document.getElementById("expense-category").value;
-    var date = document.getElementById("expense-date").value;
-    
-    var addExpenseData = {
-      name,
-      price,
-      category,
-      date,
-    }
-
-    const url10 = {{ url_for("addExpense")|tojson }};
-    fetch(url10, {
-      method: "POST",
-      headers: {"Content-Type": "application/json"},
-      body: JSON.stringify(addExpenseData),
-      cache: "no-cache"
-    }).then(() => {
-      showAlertInfo("Your expense added successfully!",'success',null);
-    });
-
-    console.log(addExpenseData);
-  }
-
-  addExpenseForm.addEventListener("submit", function(e){
-    e.preventDefault();
-    addExpenseFormHandler();
-    addExpenseForm.reset();
-  })
-
-  document.getElementById('create_board_btn').addEventListener('click', function(e){
-    e.preventDefault();
-    createUserBoard()
-  });
 
   function starterJoinBoard(){
     var givenBoardCode = document.getElementById('givenBoardCode').value;
@@ -309,11 +204,9 @@
   }
 
   function joinUserBoard(code){
-    var data = {
-      boardCode: code
-    }
-    const url1 = {{ url_for("joinBoard")|tojson }};
-    fetch(url1, {
+    var data = {boardCode: code}
+
+    fetch("/joinBoard", {
       method: "POST",
       headers: {"Content-Type": "application/json"},
       body: JSON.stringify(data),
@@ -327,8 +220,7 @@
   }
 
   function createUserBoard(){
-    const url = {{ url_for("createBoard")|tojson }};
-    fetch(url, {
+    fetch("/createBoard", {
       method: "GET",
       headers: {"Content-Type": "application/json"},
     }).then(() => {
@@ -339,109 +231,7 @@
     });
   }
 </script>
-<script>
-    var optionsColumns = {
-        chart: {
-            type: 'bar'
-        },
-        series: [{
-            name: 'sales',
-            data: [30,40,45,50,49,60,70,91,125]
-        }],
-        xaxis: {
-            categories: [1991,1992,1993,1994,1995,1996,1997, 1998,1999]
-        },
-        title: {
-          text: 'Example title',
-          offsetX: 0,
-          style: {
-            fontSize: '24px',
-            color:'#FFFFFF',
-          }
-        },
-    }
-
-    var optionsDonut = {
-          series: [44, 55, 41, 17, 15],
-          chart: {
-            type: 'donut',
-          },
-          responsive: [{
-            breakpoint: 480,
-            options: {
-              chart: {
-                width: 200
-              },
-              legend: {
-                position: 'bottom'
-              }
-            }
-          }],
-          title: {
-            text: 'Example title',
-            offsetX: 0,
-            style: {
-              fontSize: '24px',
-              color:'#FFFFFF',
-            }
-          },
-        };
-
-        var optionsSpark3 = {
-          series: [{
-          data: [30,40,45,50,49,60,70,91,125]
-        }],
-          chart: {
-          type: 'area',
-          height: 160,
-          sparkline: {
-            enabled: true
-          },
-        },
-        stroke: {
-          curve: 'straight'
-        },
-        fill: {
-          opacity: 0.3
-        },
-        xaxis: {
-          crosshairs: {
-            width: 1
-          },
-        },
-        yaxis: {
-          min: 0
-        },
-        title: {
-          text: '$135,965',
-          offsetX: 0,
-          style: {
-            fontSize: '24px',
-            color:'#FFFFFF',
-          }
-        },
-        subtitle: {
-          text: 'Profits',
-          offsetX: 0,
-          style: {
-            fontSize: '14px',
-            color:'#F5A623',
-          }
-        }
-        };
-
-
-    var chartSpark1 = new ApexCharts(document.querySelector("#chartSpark1"), optionsSpark3);
-    var chartSpark2 = new ApexCharts(document.querySelector("#chartSpark2"), optionsSpark3);
-    var chartSpark3 = new ApexCharts(document.querySelector("#chartSpark3"), optionsSpark3);
-    var chartColumns = new ApexCharts(document.querySelector("#chartColumns"), optionsColumns);
-    var chartDonut = new ApexCharts(document.querySelector("#chartDonut"), optionsDonut);
-
-    chartSpark1.render();
-    chartSpark2.render();
-    chartSpark3.render();
-    chartColumns.render();
-    chartDonut.render();
-
-</script>
+{% if board: %}
+<script src="{{url_for('static', filename='js/board-control.js')}}"></script>
+{% endif %}
 {% endblock %}
