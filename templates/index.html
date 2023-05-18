@@ -2,18 +2,20 @@
 {% block body %}
 <nav id="navbar" class="navbar navbar-expand-lg">
     <div class="container-fluid">
-      <a class="navbar-logo" href="#">ExpenseEase</a>
-      <div class="d-flex justify-content-center" style="font-weight: 600;">{{board[1]}}</div>
+      <a class="navbar-logo" href="#" style="width: 20%;">ExpenseEase</a>
+      <div class="d-flex justify-content-center" style="font-weight: 600; width: 20%;">{{board[1]}}</div>
       <div class="d-flex float-end align-items-center nav-inv-section">
         {% if board and users_count==1: %}
-        <div class="d-flex add-btn" data-bs-toggle="modal" data-bs-target="#joinWithCodeModal">
-          <div class="user-add" title="Add user"></div>
-          <span class="icon-desc">join</span>
-        </div>
-        <span class="divider">/</span>
-        <div class="d-flex join-btn" data-bs-toggle="modal" data-bs-target="#invitationCodeModal">
-          <div class="user-join"></div>
-          <span class="icon-desc">invite</span>
+        <div class="d-flex" style="align-items: center; margin-right: 15px;">
+          <div class="d-flex add-btn" data-bs-toggle="modal" data-bs-target="#joinWithCodeModal">
+            <div class="user-add" title="Add user"></div>
+            <span class="icon-desc">join</span>
+          </div>
+          <span class="divider">/</span>
+          <div class="d-flex join-btn" data-bs-toggle="modal" data-bs-target="#invitationCodeModal">
+            <div class="user-join"></div>
+            <span class="icon-desc">invite</span>
+          </div>
         </div>
         {% elif board and users_count==2: %}
         <div class="d-flex users-board-holder"> 
@@ -153,8 +155,13 @@
         <h5 class="modal-title">Join to someone's board!</h5>
         <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
       </div>
-      <div class="modal-body">
-        Down below enter valid 6 characters long code to join your friend's board and together keep track of your expenses!
+      <div class="modal-body" style="gap: 15px;">
+        <span>Down below enter valid 6 characters long code to join your friend's board and together keep track of your expenses!</span>
+        <span style="color:red">
+          <strong>Warning!</strong><br>
+          When you join another user's board, your board will be irretrievably deleted along with the data
+          (unless you share an array with someone else then you will only be deleted from it).
+        </span>
         <input type="text" class="form-control join-code" placeholder="Enter code here" maxlength="6">
       </div>
       <div class="modal-footer">
@@ -169,6 +176,12 @@
 
   function showAlertInfo(msg,category,modalId){
     var navbar = document.getElementById('navbar');
+    var alertBox = document.getElementById('notification-box'); 
+
+    if(alertBox){
+      alertBox.remove();
+    }
+
     var html = '<div id="notification-box" class="alert alert-'+category+' alert-dismissible" role="alert">'+
                 '<button type="button" class="btn-close notification-close" data-bs-dismiss="alert" aria-label="Close"></button>'+
                 '<strong>'+msg+'</strong>'+
@@ -176,7 +189,7 @@
 
     if(modalId){
       let myModalEl = document.getElementById(modalId);
-      let modal = bootstrap.Modal.getInstance(myModalEl)
+      let modal = bootstrap.Modal.getInstance(myModalEl);
       modal.hide();
     }
 
@@ -219,8 +232,7 @@
       body: JSON.stringify(addExpenseData),
       cache: "no-cache"
     }).then(() => {
-      //TO DO
-      //message
+      showAlertInfo("Your expense added successfully!",'success',null);
     });
 
     console.log(addExpenseData);
@@ -236,11 +248,6 @@
     e.preventDefault();
     createUserBoard()
   });
-
-  // document.getElementById('join_board_btn').addEventListener('click', function(e){
-  //   e.preventDefault();
-  //   joinUserBoard();
-  // });
 
   function starterJoinBoard(){
     var givenBoardCode = document.getElementById('givenBoardCode').value;
@@ -258,9 +265,10 @@
       body: JSON.stringify(data),
       cache: "no-cache"
     }).then(() => {
-      //TO DO
-      //add flash message that succesfully joined and after let's say 5 sec page will be reloaded
-      // window.location.reload();
+      showAlertInfo("Finding your friend's expenses board... After 5 second page will be reloaded!",'success',null);
+      setTimeout(() => {
+        window.location.reload();
+      }, "5000");
     });
   }
 
@@ -270,9 +278,10 @@
       method: "GET",
       headers: {"Content-Type": "application/json"},
     }).then(() => {
-      //TO DO
-      //add flash message that succesfully created and after let's say 5 sec page will be reloaded
-      window.location.reload();
+      showAlertInfo('Creating your expenses board... After 5 second page will be reloaded!','success',null);
+      setTimeout(() => {
+        window.location.reload();
+      }, "5000");
     });
   }
 </script>

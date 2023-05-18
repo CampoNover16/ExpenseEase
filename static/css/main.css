@@ -215,26 +215,26 @@ body{
     border-top: none !important; 
 }
 
-#invitationCodeModal{
+#invitationCodeModal,
+#joinWithCodeModal{
     text-align: center;
 }
 
-#invitationCodeModal .modal-body{
+#invitationCodeModal .modal-body,
+#joinWithCodeModal .modal-body{
     display: flex;
     flex-direction: column;
     align-items: center;
     gap: 15px;
 }
 
-#invitationCodeModal .modal-body input{
+#invitationCodeModal .modal-body input,
+#joinWithCodeModal .modal-body input{
     text-align: center;
     width: 100px;
 }
-#invitationCodeModal .modal-footer{
+#invitationCodeModal .modal-footer,
+#joinWithCodeModal .modal-footer{
     display: flex;
     justify-content: center;
 }
-
-/* #notification-box{
-    display: none;
-} */
