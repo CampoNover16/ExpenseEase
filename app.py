@@ -19,6 +19,7 @@ mysql = MySQL(app)
 
 @app.route('/')
 def index():
+    second_user = None
     users = 1
     if not session.get("login"):
         return redirect("/login")
@@ -29,10 +30,11 @@ def index():
         if user_board:
             cursor.execute("SELECT login FROM users JOIN board_users ON users.id = board_users.user_id WHERE board_users.board_id=%s and login!=%s",(user_board[0],session.get("login")))
             second_user = cursor.fetchone()
-            users += 1
+            if second_user:
+                users += 1
         mysql.connection.commit()
         cursor.close()
-        print(second_user)
+        print(user_board)
     return render_template('index.html', user=session, board=user_board, second_user = second_user, users_count = users)
 
 @app.route('/register', methods=['POST', 'GET'])
@@ -84,6 +86,13 @@ def joinBoard():
         cursor = mysql.connection.cursor()
         cursor.execute("SELECT id, name, invite_code FROM boards WHERE invite_code=%s and can_join=%s",(req['boardCode'],1))
         checkUserBoard = cursor.fetchone()
+        cursor.execute("SELECT * FROM boards JOIN board_users ON boards.id=board_users.board_id WHERE board_users.user_id=%s",(session.get("user_id"),))
+        userBoardToDelete = cursor.fetchone()
+        if userBoardToDelete:
+            # TO DO 
+            # Delete user from board and if it was only user drop board and all data
+            cursor.execute("DELETE FROM board_users WHERE board_users.user_id=%s and board_users.board_id=%s",(session.get("user_id"),userBoardToDelete[0]))
+            mysql.connection.commit()
         if checkUserBoard:
             cursor.execute("INSERT INTO board_users (board_id, user_id) VALUES(%s,%s)",(checkUserBoard[0], user_id))
             cursor.execute("UPDATE boards SET can_join=%s WHERE id=%s",(0,checkUserBoard[0]))
@@ -130,10 +139,10 @@ def addExpense():
        mysql.connection.commit()
     return {"message": message}
 
-
 @app.route('/logout')
 def logout():    
     session.pop('login', None)
+    session.pop('user_id', None)
     return redirect("/")
 
 if __name__ == "__main__":
