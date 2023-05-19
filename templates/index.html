@@ -48,29 +48,32 @@
 </nav>
 {% if board: %}
 {% include 'user-settings.html' %}
-<div class="d-flex flex-column">
-  <div class="d-flex justify-content-center">
-    <div class="graph-holder">
-      <div id="chartSpark1"></div>
+<div class="expenses-container">
+  <div class="d-flex flex-column">
+    <div class="d-flex justify-content-center">
+      <div class="graph-holder">
+        <div id="chartSpark1"></div>
+      </div>
+      <div class="graph-holder">
+        <div id="chartSpark2"></div>
+      </div>
+      <!-- <div class="graph-holder">
+        <div id="chartSpark3"></div>
+      </div> -->
+      <div class="graph-holder">
+        <div id="chartColumns"></div>
+      </div>
     </div>
-    <div class="graph-holder">
-      <div id="chartSpark2"></div>
+    <div class="d-flex justify-content-center align-items-center">
+      <button type="button" class="add-expense " data-bs-toggle="modal" data-bs-target="#modalCenter">Add Expense</button>
+      <div class="graph-holder">
+        <div id="chartDonut"></div>
+      </div>
+      {% include 'expenses-table.html' %}
     </div>
-    <div class="graph-holder">
-      <div id="chartSpark3"></div>
-    </div>
-  </div>
-  <div class="d-flex justify-content-center align-items-center">
-    <div class="graph-holder">
-      <div id="chartColumns"></div>
-    </div>
-    <button type="button" class="add-expense " data-bs-toggle="modal" data-bs-target="#modalCenter">Add Expense</button>
-    <div class="graph-holder">
-      <div id="chartDonut"></div>
-    </div>
-  </div>
-  <div class="all-expenses-box">
-    <button id="load-data">Load</button>
+    <!-- <div class="all-expenses-box">
+      <button id="load-data">Load</button>
+    </div> -->
   </div>
 </div>
 <!-- Modal -->
@@ -196,6 +199,24 @@
       modal.hide();
     }
     navbar.insertAdjacentHTML("afterend", html);
+  }
+
+  function switchTab(tab_nr){
+    var allTabs = document.querySelectorAll('.switch-tab');
+    var allTabsContent = document.querySelectorAll('.tab');
+    // console.log(allTabs);
+    for (const tab of allTabs) {
+      tab.classList.remove('active');
+    }
+    for (const tab of allTabsContent) {
+      tab.classList.remove('active');
+    }
+
+    var activateTab = document.querySelector('[data-tab="'+tab_nr+'"]');
+    activateTab.classList.add('active');
+
+    var activateTabContent = document.querySelector('.tab'+tab_nr+'');
+    activateTabContent.classList.add('active');
   }
 
   function starterJoinBoard(){

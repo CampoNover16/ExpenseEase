@@ -34,7 +34,6 @@ def index():
                 users += 1
         mysql.connection.commit()
         cursor.close()
-        print(user_board)
     return render_template('index.html', user=session, board=user_board, second_user = second_user, users_count = users)
 
 @app.route('/register', methods=['POST', 'GET'])
@@ -87,7 +86,6 @@ def createCodeToBoard():
 @app.route('/createInvfromReq', methods=['GET','POST'])
 def createInvFromReq():
     req = request.get_json()
-    message = None
     if(req):
         newBoardCode = createCodeToBoard()
         cursor = mysql.connection.cursor()

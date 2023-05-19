@@ -69,9 +69,9 @@ function saveBoardName(){
   }
 }
 
-loadBtn.addEventListener("click", function () {
-  loadAllData();
-})
+// loadBtn.addEventListener("click", function () {
+//   loadAllData();
+// })
 
 modal.addEventListener('shown.bs.modal', function () {
   var isNameValid,isPriceValid,isCategoryValid,isDateValid,isFormValid = false;
@@ -165,14 +165,40 @@ addExpenseForm.addEventListener("submit", function(e){
 
 var optionsColumns = {
     chart: {
-        type: 'bar'
+        type: 'bar' 
     },
     series: [{
         name: 'sales',
-        data: [30,40,45,50,49,60,70,91,125]
+        data: [30,40,45,50,49,60,70,91,125],
     }],
     xaxis: {
-        categories: [1991,1992,1993,1994,1995,1996,1997, 1998,1999]
+        categories: [1991,1992,1993,1994,1995,1996,1997, 1998,1999],
+        labels: {
+          show: true,
+          style: {
+              colors: '#FFFFFF',
+              fontSize: '12px',
+              fontFamily: 'Helvetica, Arial, sans-serif',
+              fontWeight: 400,
+              cssClass: 'apexcharts-xaxis-label',
+          },
+        },
+    },
+    yaxis: {
+      labels: {
+        show: true,
+        style: {
+            colors: '#FFFFFF',
+            fontSize: '12px',
+            fontFamily: 'Helvetica, Arial, sans-serif',
+            fontWeight: 400,
+            cssClass: 'apexcharts-xaxis-label',
+        },
+      },
+    },
+    tooltip: {
+      enabled: true,
+      theme: 'dark',
     },
     title: {
       text: 'Example title',
@@ -200,6 +226,10 @@ var optionsDonut = {
           }
         }
       }],
+      tooltip: {
+        enabled: true,
+        theme: 'dark',
+      },
       title: {
         text: 'Example title',
         offsetX: 0,
@@ -243,6 +273,10 @@ title: {
     color:'#FFFFFF',
     }
 },
+tooltip: {
+  enabled: true,
+  theme: 'dark',
+},
 subtitle: {
     text: 'Profits',
     offsetX: 0,
@@ -256,12 +290,12 @@ subtitle: {
 
 var chartSpark1 = new ApexCharts(document.querySelector("#chartSpark1"), optionsSpark3);
 var chartSpark2 = new ApexCharts(document.querySelector("#chartSpark2"), optionsSpark3);
-var chartSpark3 = new ApexCharts(document.querySelector("#chartSpark3"), optionsSpark3);
+// var chartSpark3 = new ApexCharts(document.querySelector("#chartSpark3"), optionsSpark3);
 var chartColumns = new ApexCharts(document.querySelector("#chartColumns"), optionsColumns);
 var chartDonut = new ApexCharts(document.querySelector("#chartDonut"), optionsDonut);
 
 chartSpark1.render();
 chartSpark2.render();
-chartSpark3.render();
+// chartSpark3.render();
 chartColumns.render();
 chartDonut.render();

@@ -29,7 +29,7 @@ body{
     background-color: var(--primary);
     margin: 15px;
     padding: 25px;
-    height: 475px;
+    height: 375px;
     display: flex;
     justify-content: center;
     align-items: center;
@@ -244,4 +244,74 @@ body{
 
 .btn-close {
     filter: invert(1);
+}
+
+.expenses-container{
+    width: 90%;
+    margin-right: auto;
+    margin-left: auto;
+}
+
+#expenses-table{
+    width: 900px;
+    height: 425px;
+    background-color: var(--primary);
+    border-radius: 15px;
+}
+
+.tabs-holder{
+    position: relative;
+    top: -25px;
+}
+
+.switch-tab{
+    width: 15%;
+    height: 35px;
+    border-top-left-radius: 15px;
+    border-top-right-radius: 15px;
+    background-color: var(--primary);
+    border-top: 2px solid var(--secondary);
+    border-left: 2px solid var(--secondary);
+    border-right: 2px solid var(--secondary);
+    border-bottom: none;
+    color: var(--text-color);
+    font-weight: 600;
+    pointer-events: all;
+}
+
+.switch-tab:hover{
+    color: var(--accent);
+}
+
+.switch-tab.active{
+    background-color: var(--secondary);
+    color: var(--accent);
+}
+
+.tab1,
+.tab2,
+.tab3,
+.tab4{
+    padding: 15px;
+    display: none;
+}
+
+.tab1.active,
+.tab2.active,
+.tab3.active,
+.tab4.active{
+    display: block;
+}
+
+.apexcharts-menu {
+    background: var(--primary) !important;
+    border: 1px solid var(--secondary) !important;
+}
+
+.apexcharts-theme-light .apexcharts-menu-item:hover {
+    background: var(--accent) !important;
+}
+
+.apexcharts-tooltip {
+    background-color: var(--primary) !important;
 }
