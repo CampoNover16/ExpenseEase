@@ -1,4 +1,4 @@
-from flask import Flask, render_template, request, redirect, url_for, session, flash
+from flask import Flask, render_template, request, redirect, url_for, session, flash, make_response,jsonify
 from flask_session import Session
 from flask_mysqldb import MySQL
 from datetime import datetime,date
@@ -74,7 +74,49 @@ def login():
     return render_template('login.html')
 
 def createCodeToBoard():
-    return ''.join(random.choice(string.ascii_uppercase + string.digits) for _ in range(6))
+    validCode = False
+    while(validCode == False):
+        generatedCode = ''.join(random.choice(string.ascii_uppercase + string.digits) for _ in range(6))
+        cursor = mysql.connection.cursor()
+        cursor.execute("SELECT * FROM boards WHERE invite_code=%s",(generatedCode,))
+        checkIfBoardExists = cursor.fetchone()
+        if not checkIfBoardExists:
+            validCode = True
+    return generatedCode
+
+@app.route('/createInvfromReq', methods=['GET','POST'])
+def createInvFromReq():
+    req = request.get_json()
+    message = None
+    if(req):
+        newBoardCode = createCodeToBoard()
+        cursor = mysql.connection.cursor()
+        cursor.execute("SELECT * FROM boards JOIN board_users ON boards.id=board_users.board_id WHERE board_users.user_id=%s",(session.get("user_id"),))
+        userBoard = cursor.fetchone()
+        cursor.execute("UPDATE boards SET invite_code=%s WHERE id=%s",(newBoardCode,userBoard[0]))
+        mysql.connection.commit()
+        cursor.close()
+        res = make_response(jsonify({'newBoardCode': newBoardCode}))
+    return res
+
+@app.route('/deleteUserBoard', methods=['GET','POST'])
+def deleteUserBoard():
+    if session.get("login"):
+        cursor = mysql.connection.cursor()
+        cursor.execute("SELECT * FROM boards JOIN board_users ON boards.id=board_users.board_id WHERE board_users.user_id=%s",(session.get("user_id"),))
+        allBoardUsers = len(cursor.fetchall())
+        cursor.execute("SELECT * FROM boards JOIN board_users ON boards.id=board_users.board_id WHERE board_users.user_id=%s",(session.get("user_id"),))
+        userBoardData = cursor.fetchone()
+        if(allBoardUsers == 1):
+            cursor.execute("DELETE FROM board_data WHERE board_data.board_id=%s",(userBoardData[0],))
+            cursor.execute("DELETE FROM board_users WHERE board_users.user_id=%s and board_users.board_id=%s",(session.get("user_id"),userBoardData[0]))
+            cursor.execute("DELETE FROM boards WHERE boards.id=%s",(userBoardData[0],))
+            mysql.connection.commit()
+            cursor.close()
+            res = make_response(jsonify({"message": "Your board has been successfully removed", "type": 'success'}))
+        else:
+            res = make_response(jsonify({"message": "Your cannot delete board where there is more then one user on board!", "type": 'danger`'}))
+        return res
 
 @app.route('/joinBoard', methods=['POST','GET'])
 def joinBoard():

@@ -1,3 +1,38 @@
+function deleteUserBoard(){
+  fetch("/deleteUserBoard", {
+    method: "POST",
+    headers: {"Content-Type": "application/json"},
+    cache: "no-cache"
+  }).then((response) => {
+    response.json().then((data)=>{
+      console.log(data['newBoardCode']);
+      showAlertInfo(data['message'],'success','userSettings');
+      setTimeout(() => {
+        window.location.reload();
+      }, "5000");
+    })
+  });
+}
+
+function generateCodeToBoard(){
+  var parentPlacement = document.querySelector('.board-invitation-code');
+  var data = {toExistingBoard: 'True'};
+  fetch("/createInvfromReq", {
+    method: "POST",
+    headers: {"Content-Type": "application/json"},
+    body: JSON.stringify(data),
+    cache: "no-cache"
+  }).then((response) => {
+    showAlertInfo("Your new invitation code has been generated!",'success','userSettings');
+
+    response.json().then((data)=>{
+      console.log(data['newBoardCode']);
+      parentPlacement.querySelector('strong').innerHTML = data['newBoardCode'];
+      document.querySelector('.inv-code').value = data['newBoardCode']
+    })
+  });
+}
+
 function changeBoardName(currentName){
   var parentPlacement = document.querySelector('.board-name');
   var inputHtml = '<input type="text" class="form-control newBoardName" value="'+currentName+'" style="width: 235px;">';
