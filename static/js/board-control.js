@@ -73,6 +73,8 @@ loadBtn.addEventListener("click", function () {
   loadAllData();
 })
 
+changeModal.addEventListener('shown.bs.modal', function () {})
+
 modal.addEventListener('shown.bs.modal', function () {
   var isNameValid,isPriceValid = false;
   document.getElementById('expense-date').valueAsDate = new Date();
@@ -125,7 +127,7 @@ function generateListItem(item){
   return(`<li class="expense-element" id="element-${item.id}">
       <div class="expense-element_name">
         <h3 class="expense-element_name_name">${item.name}</h3>
-        <p class="expense-element_name_category">Category</p>
+        <p class="expense-element_name_category">${item.category}</p>
       </div>
       <div class="expense-element_date">
         ${item.date}
@@ -188,6 +190,7 @@ addExpenseForm.addEventListener("submit", function(e){
   e.preventDefault();
   addExpenseFormHandler();
   addExpenseForm.reset();
+  loadAllData();
 })
 
 var optionsColumns = {

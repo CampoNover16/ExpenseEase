@@ -181,7 +181,7 @@ def addExpense():
        cursor = mysql.connection.cursor() 
        cursor.execute("SELECT `board_id` FROM `board_users` WHERE `user_id`=%s",(user_id,))
        userboardId = cursor.fetchone()
-       cursor.execute("INSERT INTO `board_data`(`board_id`, `param`, `value`, `day`, `month`, `year`, `created`, `modified`) VALUES (%s,%s,%s,%s,%s,%s,%s,%s)",(userboardId[0],req['name'],req['price'],day,month,year,createDate,createDate))
+       cursor.execute("INSERT INTO `board_data`(`board_id`, `param`, `value`,`category`, `day`, `month`, `year`, `created`, `modified`) VALUES (%s,%s,%s,%s,%s,%s,%s,%s,%s)",(userboardId[0],req['name'],req['price'],req['category'],day,month,year,createDate,createDate))
        mysql.connection.commit()
     return {"message": message}
 
@@ -197,10 +197,11 @@ def getAllExpenses():
         cursor.execute("SELECT * FROM `board_data` WHERE `board_id`=%s",(userboardId[0],))
         boardData = cursor.fetchall()
         for data in boardData:
-            expenseDate =("%s-%s-%s" % (data[4],data[5],data[6]))
+            expenseDate =("%s-%s-%s" % (data[5],data[6],data[7]))
             expense = {
                 "id": data[0],
                 "name": data[2],
+                "category": data[4],
                 "price": data[3],
                 "date": expenseDate
             }

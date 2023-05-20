@@ -77,41 +77,40 @@
   </div>
 </div>
 <!-- change expense Modal -->
-<div class="modal fade" id="modalCenter" tabindex="-1" role="dialog" aria-labelledby="modalCenterTitle" aria-hidden="true">
+<div class="modal fade" id="modalChangeCenter" tabindex="-1" role="dialog" aria-labelledby="modalCenterTitle" aria-hidden="true">
   <div class="modal-dialog modal-dialog-centered" role="document">
-    <div class="modal-content" id="modalContent">
+    <div class="modal-content" id="modalChangeContent">
       <div class="modal-header d-flex align-items-center justify-content-center">
-        <h5 class="modal-title" id="modalLongTitle">Add Expense</h5>
+        <h5 class="modal-title" id="modalChangeLongTitle">Add Expense</h5>
       </div>
       <div class="modal-body">
-        <form id="add-expense-form">
+        <form id="change-expense-form">
           <div class="form-group">
             <label for="expense-name" class="col-form-label">Expense:</label>
-            <input type="text" class="form-control" id="expense-name" required>
+            <input type="text" class="form-control" id="expense-change-name" required>
           </div>
           <div class="form-group">
             <label for="expense-price" class="col-form-label">Price:</label>
-            <input type="number" class="form-control" id="expense-price" required>
+            <input type="number" class="form-control" id="expense-change-price" required>
           </div>
             <div class="form-group">
               <label for="expense-category" class="col-form-label">Category:</label>
-                <select class="form-control" id="expense-category" required>
-                  <option>1</option>
-                  <option>2</option>
-                  <option>3</option>
-                  <option>4</option>
-                  <option>5</option>
+                <select class="form-control" id="expense-change-category" required>
+                  <option>Home</option>
+                  <option>Food</option>
+                  <option>Entertainment</option>
+                  <option>Car</option>
                 </select>
             </div>
           <div class="form-group">
             <label for="expense-date" class="col-form-label">Date:</label>
-            <input type="date" class="form-control" id="expense-date" required>
+            <input type="date" class="form-control" id="expense-change-date" required>
           </div>
         </form>
       </div>
       <div class="modal-footer">
         <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Close</button>
-        <button type="submit" form="add-expense-form" class="btn btn-primary" data-bs-dismiss="modal" id="sub-btn">Save changes</button>
+        <button type="submit" form="add-expense-form" class="btn btn-primary" data-bs-dismiss="modal" id="sub-change-btn">Save changes</button>
       </div>
     </div>
   </div>
@@ -136,11 +135,10 @@
             <div class="form-group">
               <label for="expense-category" class="col-form-label">Category:</label>
                 <select class="form-control" id="expense-category" required>
-                  <option>1</option>
-                  <option>2</option>
-                  <option>3</option>
-                  <option>4</option>
-                  <option>5</option>
+                  <option>Home</option>
+                  <option>Food</option>
+                  <option>Entertainment</option>
+                  <option>Car</option>
                 </select>
             </div>
           <div class="form-group">
@@ -220,7 +218,9 @@
 <script>
   const loadBtn = document.getElementById("load-data");
   const modal = document.getElementById("modalCenter");
+  const changeModal = document.getElementById("modalChangeCenter");
   const addExpenseForm = document.getElementById("add-expense-form");
+  const changeExpenseForm = document.getElementById("change-expense-form");
 
   function showAlertInfo(msg,category,modalId){
     var navbar = document.getElementById('navbar');
