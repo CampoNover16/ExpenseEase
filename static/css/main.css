@@ -321,6 +321,7 @@ body{
     padding: none;
     margin: none;
     overflow-y: scroll;
+    height: 350px;
 }
 
 .expense-element{
@@ -331,5 +332,39 @@ body{
     width: 90%;
     padding: 10px;
     margin-bottom: 20px;
+}
+
+.expense-element_name{
+    display: flex;
+    flex-direction: column;
+    width: 40%;
     
+}
+
+.expense-element_name_name{
+    margin-bottom: 0 !important;
+}
+
+.expense-element_name_category{
+    margin: 0 !important;
+}
+
+.expense-element_price{
+    display: flex;
+    justify-content: end;
+    align-items: center;
+    width: 15%;
+}
+
+.expense-element_date{
+    display: flex;
+    align-items: end;
+    width: 15%;
+}
+
+.expense-element_options{
+    display: flex;
+    justify-content: space-around;
+    align-items: center;
+    width: 30%;
 }

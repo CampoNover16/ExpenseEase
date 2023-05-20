@@ -124,15 +124,15 @@ function generateListItem(item){
 
   return(`<li class="expense-element" id="element-${item.id}">
       <div class="expense-element_name">
-        <h1>${item.name}</h1>
-        <p>Category</p>
-      </div>
-      <div class="expense-element_price">
-        ${item.price}$
+        <h3 class="expense-element_name_name">${item.name}</h3>
+        <p class="expense-element_name_category">Category</p>
       </div>
       <div class="expense-element_date">
         ${item.date}
       </div>
+      <div class="expense-element_price">
+      ${item.price}$
+    </div>
       <div class="expense-element_options">
         <button>Change</button>
         <button>Delete</button>
