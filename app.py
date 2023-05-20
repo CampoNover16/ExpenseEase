@@ -189,18 +189,27 @@ def addExpense():
 def getAllExpenses():
     user_id = session.get("user_id")
     message = None
+    dataArray = []
     if session.get("login"):
         cursor = mysql.connection.cursor()
         cursor.execute("SELECT `board_id` FROM `board_users` WHERE `user_id`=%s",(user_id,))
         userboardId = cursor.fetchone()
         cursor.execute("SELECT * FROM `board_data` WHERE `board_id`=%s",(userboardId[0],))
         boardData = cursor.fetchall()
-        print(boardData)
-
+        for data in boardData:
+            expenseDate =("%s-%s-%s" % (data[4],data[5],data[6]))
+            expense = {
+                "id": data[0],
+                "name": data[2],
+                "price": data[3],
+                "date": expenseDate
+            }
+            dataArray.append(expense)
         mysql.connection.commit()
+        res = make_response(jsonify(dataArray))
 
 
-    return {"message": message}
+    return res
 
 @app.route('/saveUserBoardName', methods=['POST','GET'])
 def saveUserBoardName():

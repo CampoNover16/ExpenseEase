@@ -69,12 +69,12 @@ function saveBoardName(){
   }
 }
 
-// loadBtn.addEventListener("click", function () {
-//   loadAllData();
-// })
+loadBtn.addEventListener("click", function () {
+  loadAllData();
+})
 
 modal.addEventListener('shown.bs.modal', function () {
-  var isNameValid,isPriceValid,isCategoryValid,isDateValid,isFormValid = false;
+  var isNameValid,isPriceValid = false;
   document.getElementById('expense-date').valueAsDate = new Date();
   const nameInput = document.getElementById("expense-name");
   const priceInput = document.getElementById("expense-price");
@@ -102,15 +102,42 @@ modal.addEventListener('shown.bs.modal', function () {
 })
 
 function loadAllData(){
-  console.log("DUPA");
+  const expensesList = document.getElementById("expenses-list")
+  while(expensesList.firstChild && expensesList.removeChild(expensesList.firstChild));
+  let html = "";
+
   fetch("/getAllExpenses", {
     method: "GET",
     headers: {"Content-Type": "application/json"},
-  }).then(() => {
-    //TO DO
-    //message
-    // window.location.reload();
+  }).then((response) => {
+    response.json().then((data)=>{
+      console.log(data);
+      data.forEach((item) => {
+        html += generateListItem(item);
+      })
+      expensesList.innerHTML = html;
+    })
   });
+}
+
+function generateListItem(item){
+
+  return(`<li class="expense-element" id="element-${item.id}">
+      <div class="expense-element_name">
+        <h1>${item.name}</h1>
+        <p>Category</p>
+      </div>
+      <div class="expense-element_price">
+        ${item.price}$
+      </div>
+      <div class="expense-element_date">
+        ${item.date}
+      </div>
+      <div class="expense-element_options">
+        <button>Change</button>
+        <button>Delete</button>
+      </div>
+  </li>`);
 }
 
 function joinToBoard(){

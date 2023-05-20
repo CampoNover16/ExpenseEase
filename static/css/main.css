@@ -315,3 +315,21 @@ body{
 .apexcharts-tooltip {
     background-color: var(--primary) !important;
 }
+
+.expenses-list{
+    list-style: none;
+    padding: none;
+    margin: none;
+    overflow-y: scroll;
+}
+
+.expense-element{
+    display: flex;
+    flex-direction: row;
+    background-color: var(--secondary);
+    border-radius: 15px;
+    width: 90%;
+    padding: 10px;
+    margin-bottom: 20px;
+    
+}

@@ -1,7 +1,7 @@
 <div id="expenses-table">
     <div class="tabs-holder">
         <button class="switch-tab active" onclick="switchTab(1)" data-tab="1">1</button>
-        <button class="switch-tab" onclick="switchTab(2)" data-tab="2">2</button>
+        <button class="switch-tab" onclick="switchTab(2)" data-tab="2"  id="load-data">2</button>
         <button class="switch-tab" onclick="switchTab(3)" data-tab="3">3</button>
         <button class="switch-tab" onclick="switchTab(4)" data-tab="4">4</button>
     </div>
@@ -36,7 +36,11 @@
             </tbody>
         </table>
     </div>
-    <div class="tab tab2"></div>
+    <div class="tab tab2">
+      <ul class="expenses-list" id="expenses-list">
+
+      </ul>
+    </div>
     <div class="tab tab3"></div>
     <div class="tab tab4"></div>
 </div>
