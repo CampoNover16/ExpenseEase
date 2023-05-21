@@ -237,9 +237,7 @@ body{
 }
 
 .all-expenses-box{
-    height: 400px;
-    width: 100%;
-    background-color: red;
+    display: none;
 }
 
 .btn-close {

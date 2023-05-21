@@ -113,13 +113,83 @@ function loadAllData(){
     headers: {"Content-Type": "application/json"},
   }).then((response) => {
     response.json().then((data)=>{
-      console.log(data);
+      calculateExpensesByCategory(data);
       data.forEach((item) => {
         html += generateListItem(item);
       })
       expensesList.innerHTML = html;
     })
   });
+}
+
+function calculateExpensesByCategory(items){
+  const uniqueCategories = [...new Set(items.map(item => item.category))];
+  var sumOfAll = 0;
+  items.forEach((temp2) => {
+    sumOfAll += temp2.price;
+  })
+  const finalPercentage = {};
+
+  uniqueCategories.forEach(category => {
+    const filteredByCategory = items.filter(item => item.category == category);
+    let sum = 0;
+    filteredByCategory.forEach((temp1)=>{
+      sum += temp1.price;
+    });
+    finalPercentage[category] = parseInt(sum);
+  })
+  donutGraphCreate(finalPercentage);
+}
+
+function donutGraphCreate(items){
+  var donutDivHook = document.getElementById('chartDonut');
+  var optionsDonut = {
+    series: Object.values(items),
+    labels: Object.keys(items),
+    legend: {
+      show: true,
+      labels: {
+          useSeriesColors: true
+      },
+    },
+    chart: {
+      type: 'donut',
+    },
+    responsive: [{
+      breakpoint: 480,
+      options: {
+        chart: {
+          width: 200
+        },
+        legend: {
+          position: 'bottom'
+        }
+      }
+    }],
+    tooltip: {
+      enabled: true,
+      theme: 'dark',
+    },
+    title: {
+      text: 'Categorized monthly epxenses',
+      offsetX: 0,
+      style: {
+        fontSize: '24px',
+        color:'#FFFFFF',
+      }
+    },
+  };
+  var chartDonut = new ApexCharts(document.querySelector("#chartDonut"), optionsDonut);
+  if(donutDivHook.childNodes.length == 0){
+    chartDonut.render();
+  }else{
+    chartDonut.updateSeries([{
+      data: Object.values(items),
+    }])
+    chartDonut.updateOptions({
+      labels: Object.keys(items)
+    })
+  }
 }
 
 function generateListItem(item){
@@ -240,36 +310,6 @@ var optionsColumns = {
     },
 }
 
-var optionsDonut = {
-      series: [44, 55, 41, 17, 15],
-      chart: {
-        type: 'donut',
-      },
-      responsive: [{
-        breakpoint: 480,
-        options: {
-          chart: {
-            width: 200
-          },
-          legend: {
-            position: 'bottom'
-          }
-        }
-      }],
-      tooltip: {
-        enabled: true,
-        theme: 'dark',
-      },
-      title: {
-        text: 'Example title',
-        offsetX: 0,
-        style: {
-          fontSize: '24px',
-          color:'#FFFFFF',
-        }
-      },
-    };
-
 var optionsSpark3 = {
     series: [{
     data: [30,40,45,50,49,60,70,91,125]
@@ -322,10 +362,8 @@ var chartSpark1 = new ApexCharts(document.querySelector("#chartSpark1"), options
 var chartSpark2 = new ApexCharts(document.querySelector("#chartSpark2"), optionsSpark3);
 // var chartSpark3 = new ApexCharts(document.querySelector("#chartSpark3"), optionsSpark3);
 var chartColumns = new ApexCharts(document.querySelector("#chartColumns"), optionsColumns);
-var chartDonut = new ApexCharts(document.querySelector("#chartDonut"), optionsDonut);
 
 chartSpark1.render();
 chartSpark2.render();
 // chartSpark3.render();
 chartColumns.render();
-chartDonut.render();
