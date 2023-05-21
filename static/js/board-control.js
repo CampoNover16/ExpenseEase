@@ -73,7 +73,9 @@ loadBtn.addEventListener("click", function () {
   loadAllData();
 })
 
-changeModal.addEventListener('shown.bs.modal', function () {})
+changeModal.addEventListener('shown.bs.modal', function () {
+
+})
 
 modal.addEventListener('shown.bs.modal', function () {
   var isNameValid,isPriceValid = false;
@@ -206,8 +208,8 @@ function generateListItem(item){
       ${item.price}$
     </div>
       <div class="expense-element_options">
-        <button>Change</button>
-        <button>Delete</button>
+        <button onClick="loadExpenseHandler(${item.id})" data-bs-toggle="modal" data-bs-target="#modalChangeCenter"">Change</button>
+        <button onClick="deleteExpenseHandler(${item.id})">Delete</button>
       </div>
   </li>`);
 }
@@ -231,6 +233,69 @@ function copyInviteContent(){
   showAlertInfo('Code was successfully copied!','success','invitationCodeModal');
 }
 
+function loadExpenseHandler(id){
+  var date = document.getElementById('expense-change-date')
+  var nameInput = document.getElementById("expense-change-name");
+  var priceInput = document.getElementById("expense-change-price");
+  var categoryInput = document.getElementById("expense-change-category");
+  
+  fetch("/getExpense", {
+    method: "POST",
+    headers: {"Content-Type": "application/json"},
+    body: JSON.stringify(id),
+    cache: "no-cache"
+  }).then((response) => {
+      response.json().then((data)=>{
+        nameInput.value = data.name;
+        priceInput.value = data.price;
+        categoryInput.value = data.category;
+        var dateParts = data.date.split('-');
+        date.valueAsDate = new Date(dateParts[2],(dateParts[1]-1),dateParts[0]);
+    })
+  });
+}
+
+function deleteExpenseHandler(id){
+  fetch("/deleteExpense", {
+    method: "POST",
+    headers: {"Content-Type": "application/json"},
+    body: JSON.stringify(id),
+    cache: "no-cache"
+  }).then(() => {
+    loadAllData();
+  });
+}
+
+function changeExpenseFormHandler(id){
+  var name = document.getElementById("expense-change-name").value;
+  var price = document.getElementById("expense-change-price").value;
+  var category = document.getElementById("expense-change-category").value;
+  var date = document.getElementById("expense-change-date").value;
+
+  var changeExpenseData = {
+    id,
+    name,
+    price,
+    category,
+    date,
+  }
+
+  fetch("/changeExpense", {
+    method: "POST",
+    headers: {"Content-Type": "application/json"},
+    body: JSON.stringify(changeExpenseData),
+    cache: "no-cache"
+  }).then(() => {
+    showAlertInfo("Your expense updated successfully!",'success',null);
+    loadAllData();
+  });
+  
+}
+
+changeExpenseForm.addEventListener("submit", function(e){
+  e.preventDefault();
+})
+
 function addExpenseFormHandler(){
   var name = document.getElementById("expense-name").value;
   var price = document.getElementById("expense-price").value;
@@ -251,16 +316,14 @@ function addExpenseFormHandler(){
     cache: "no-cache"
   }).then(() => {
     showAlertInfo("Your expense added successfully!",'success',null);
+    loadAllData();
   });
-
-  console.log(addExpenseData);
 }
 
 addExpenseForm.addEventListener("submit", function(e){
   e.preventDefault();
   addExpenseFormHandler();
   addExpenseForm.reset();
-  loadAllData();
 })
 
 var optionsColumns = {

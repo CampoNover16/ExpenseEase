@@ -185,6 +185,60 @@ def addExpense():
        mysql.connection.commit()
     return {"message": message}
 
+@app.route('/changeExpense', methods=['POST','GET'])
+def changeExpense():
+    user_id = session.get("user_id")
+    message = None
+    updateDate = datetime.now()
+    req = request.get_json()
+    year, month, day = str(req['date']).split("-")
+
+    if session.get("login"):
+        if (request.method == 'POST'):
+            cursor = mysql.connection.cursor()
+            cursor.execute("UPDATE `board_data` SET `param`=%s,`value`=%s,`category`=%s,`day`=%s,`month`=%s,`year`=%s,`modified`=%s WHERE `id`=%s",(req['name'],req['price'],req['category'],day,month,year,updateDate,req['id']))
+            mysql.connection.commit()
+
+
+    return {"message": message}
+
+@app.route('/getExpense', methods=['POST','GET'])
+def getExpense():
+    message = None
+    req = request.get_json()
+
+    if session.get("login"):
+        cursor = mysql.connection.cursor()
+        cursor.execute("SELECT * FROM `board_data` WHERE `id`=%s",(req,))
+        data = cursor.fetchone()
+        expenseDate =("%s-%s-%s" % (data[5],data[6],data[7]))
+        expense = {
+            "id": data[0],
+            "name": data[2],
+            "category": data[4],
+            "price": data[3],
+            "date": expenseDate
+        }
+        mysql.connection.commit()
+        res = make_response(jsonify(expense))
+
+        return res
+
+    return{"message": message}
+
+@app.route('/deleteExpense', methods=['POST','GET'])
+def deleteExpense():
+    message = None
+    req = request.get_json()
+
+    if session.get("login"):
+        cursor = mysql.connection.cursor()
+        cursor.execute("DELETE FROM `board_data` WHERE `id`=%s",(req,))
+        mysql.connection.commit()
+
+    return{"message": message}
+
+
 @app.route('/getAllExpenses', methods=['POST','GET'])
 def getAllExpenses():
     user_id = session.get("user_id")
