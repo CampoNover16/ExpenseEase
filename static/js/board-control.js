@@ -238,6 +238,8 @@ function loadExpenseHandler(id){
   var nameInput = document.getElementById("expense-change-name");
   var priceInput = document.getElementById("expense-change-price");
   var categoryInput = document.getElementById("expense-change-category");
+
+  changeExpenseForm.dataset.expenseId = id;
   
   fetch("/getExpense", {
     method: "POST",
@@ -250,7 +252,7 @@ function loadExpenseHandler(id){
         priceInput.value = data.price;
         categoryInput.value = data.category;
         var dateParts = data.date.split('-');
-        date.valueAsDate = new Date(dateParts[2],(dateParts[1]-1),dateParts[0]);
+        date.valueAsDate = new Date(Date.UTC(dateParts[2],(dateParts[1]-1),dateParts[0]));
     })
   });
 }
@@ -294,6 +296,7 @@ function changeExpenseFormHandler(id){
 
 changeExpenseForm.addEventListener("submit", function(e){
   e.preventDefault();
+  changeExpenseFormHandler(changeExpenseForm.dataset.expenseId);  
 })
 
 function addExpenseFormHandler(){

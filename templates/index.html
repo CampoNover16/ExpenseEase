@@ -84,7 +84,7 @@
         <h5 class="modal-title" id="modalChangeLongTitle">Update Expense</h5>
       </div>
       <div class="modal-body">
-        <form id="change-expense-form">
+        <form id="change-expense-form" data-expense-id="">
           <div class="form-group">
             <label for="expense-name" class="col-form-label">Expense:</label>
             <input type="text" class="form-control" id="expense-change-name" required>
@@ -110,7 +110,7 @@
       </div>
       <div class="modal-footer">
         <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Close</button>
-        <button type="submit" form="add-expense-form" class="btn btn-primary" data-bs-dismiss="modal" id="sub-change-btn">Save changes</button>
+        <button type="submit" form="change-expense-form" class="btn btn-primary" data-bs-dismiss="modal" id="sub-change-btn">Save changes</button>
       </div>
     </div>
   </div>
