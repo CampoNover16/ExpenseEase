@@ -259,7 +259,8 @@ body{
 
 .tabs-holder{
     position: relative;
-    top: -25px;
+    top: -35px;
+    left: 25px;
 }
 
 .switch-tab{
@@ -275,6 +276,7 @@ body{
     color: var(--text-color);
     font-weight: 600;
     pointer-events: all;
+    font-size: 14px;
 }
 
 .switch-tab:hover{

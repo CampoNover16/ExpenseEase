@@ -1,3 +1,7 @@
+const monthNames = ["January", "February", "March", "April", "May", "June",
+  "July", "August", "September", "October", "November", "December"
+];
+
 function deleteUserBoard(){
   fetch("/deleteUserBoard", {
     method: "POST",
@@ -5,7 +9,6 @@ function deleteUserBoard(){
     cache: "no-cache"
   }).then((response) => {
     response.json().then((data)=>{
-      console.log(data['newBoardCode']);
       showAlertInfo(data['message'],'success','userSettings');
       setTimeout(() => {
         window.location.reload();
@@ -26,7 +29,6 @@ function generateCodeToBoard(){
     showAlertInfo("Your new invitation code has been generated!",'success','userSettings');
 
     response.json().then((data)=>{
-      console.log(data['newBoardCode']);
       parentPlacement.querySelector('strong').innerHTML = data['newBoardCode'];
       document.querySelector('.inv-code').value = data['newBoardCode']
     })
@@ -69,9 +71,15 @@ function saveBoardName(){
   }
 }
 
-loadBtn.addEventListener("click", function () {
+window.onload = () => {
   loadAllData();
-})
+  loadPreviousMonthData();
+};
+
+// loadBtn.addEventListener("click", function () {
+//   loadAllData();
+//   loadPreviousMonthData();
+// })
 
 changeModal.addEventListener('shown.bs.modal', function () {
 
@@ -91,7 +99,6 @@ modal.addEventListener('shown.bs.modal', function () {
       if(isNameValid && isPriceValid ){
       btn.disabled = false;
       }
-
     }
    });
    priceInput.addEventListener( "blur" , function() {
@@ -100,7 +107,6 @@ modal.addEventListener('shown.bs.modal', function () {
       if(isNameValid && isPriceValid ){
       btn.disabled = false;
       }
-
     }
    });
 })
@@ -116,6 +122,7 @@ function loadAllData(){
   }).then((response) => {
     response.json().then((data)=>{
       calculateExpensesByCategory(data);
+      calculateExpensesFromCurrentMonth(data);
       data.forEach((item) => {
         html += generateListItem(item);
       })
@@ -124,13 +131,25 @@ function loadAllData(){
   });
 }
 
+function loadPreviousMonthData(){
+  fetch("/getPreviousMonthExpenses", {
+    method: "GET",
+    headers: {"Content-Type": "application/json"},
+  }).then((response) => {
+    response.json().then((data)=>{
+      calculateExpensesFromPreviousMonth(data);
+    })
+  });
+}
+
 function calculateExpensesByCategory(items){
   const uniqueCategories = [...new Set(items.map(item => item.category))];
+  const finalPercentage = {};
   var sumOfAll = 0;
+
   items.forEach((temp2) => {
     sumOfAll += temp2.price;
   })
-  const finalPercentage = {};
 
   uniqueCategories.forEach(category => {
     const filteredByCategory = items.filter(item => item.category == category);
@@ -143,6 +162,177 @@ function calculateExpensesByCategory(items){
   donutGraphCreate(finalPercentage);
 }
 
+function calculateExpensesFromCurrentMonth(items){
+  const uniqueDate = [...new Set(items.map(item => item.date))];
+  const finalDailyExpenses = {};
+  var sumOfAll = 0;
+
+  items.forEach((item) => {
+    sumOfAll += item.price;
+  })
+
+  uniqueDate.forEach(date => {
+    const filteredByDate = items.filter(item => item.date == date);
+    let sum = 0;
+    filteredByDate.forEach((temp1)=>{
+      sum += temp1.price;
+    });
+    finalDailyExpenses[date] = sum.toFixed(2);
+  })
+  currentMothSparkGraphCreate(finalDailyExpenses, sumOfAll);
+}
+
+function currentMothSparkGraphCreate(items, sum){
+  const d = new Date();
+  var spark2DivHook = document.getElementById('chartSpark2');
+
+  var optionsSpark2 = {
+    series: [{
+      name: 'Daily total',
+      data: Object.values(items),
+    }],
+    labels: Object.keys(items),
+    legend: {
+      show: true,
+      labels: {
+          useSeriesColors: true
+      },
+    },
+    chart: {
+      type: 'area',
+      height: 160,
+      sparkline: {
+        enabled: true
+      },
+    },
+    stroke: {
+      curve: 'straight'
+    },
+    fill: {
+      opacity: 0.3
+    },
+    xaxis: {
+      crosshairs: {
+        width: 1
+      },
+    },
+    yaxis: {
+      min: 0
+    },
+    title: {
+      text: sum + ' PLN',
+      offsetX: 0,
+      style: {
+        fontSize: '24px',
+        color:'#FFFFFF',
+      }
+    },
+    tooltip: {
+      enabled: true,
+      theme: 'dark',
+    },
+    subtitle: {
+      text: 'Total expenses('+monthNames[d.getMonth()]+' '+d.getFullYear()+')',
+      offsetX: 0,
+      style: {
+        fontSize: '14px',
+        color:'#F5A623',
+      }
+    }
+  };
+
+  var chartSpark2 = new ApexCharts(spark2DivHook, optionsSpark2);
+  if(spark2DivHook.childNodes.length == 0){
+    chartSpark2.render();
+  }
+}
+
+function calculateExpensesFromPreviousMonth(items){
+  const uniqueDate = [...new Set(items.map(item => item.date))];
+  const finalDailyExpenses = {};
+  var sumOfAll = 0;
+
+  items.forEach((item) => {
+    sumOfAll += item.price;
+  })
+
+  uniqueDate.forEach(date => {
+    const filteredByDate = items.filter(item => item.date == date);
+    let sum = 0;
+    filteredByDate.forEach((temp1)=>{
+      sum += temp1.price;
+    });
+    finalDailyExpenses[date] = sum.toFixed(2);
+  })
+  previousMothSparkGraphCreate(finalDailyExpenses, sumOfAll);
+}
+
+
+function previousMothSparkGraphCreate(items, sum){
+  const d = new Date();
+  var spark1DivHook = document.getElementById('chartSpark1');
+
+  var optionsSpark2 = {
+    series: [{
+      name: 'Daily total',
+      data: Object.values(items),
+    }],
+    labels: Object.keys(items),
+    legend: {
+      show: true,
+      labels: {
+          useSeriesColors: true
+      },
+    },
+    chart: {
+      type: 'area',
+      height: 160,
+      sparkline: {
+        enabled: true
+      },
+    },
+    stroke: {
+      curve: 'straight'
+    },
+    fill: {
+      opacity: 0.3
+    },
+    xaxis: {
+      crosshairs: {
+        width: 1
+      },
+    },
+    yaxis: {
+      min: 0
+    },
+    title: {
+      text: sum + ' PLN',
+      offsetX: 0,
+      style: {
+        fontSize: '24px',
+        color:'#FFFFFF',
+      }
+    },
+    tooltip: {
+      enabled: true,
+      theme: 'dark',
+    },
+    subtitle: {
+      text: 'Total expenses('+monthNames[d.getMonth()-1]+' '+d.getFullYear()+')',
+      offsetX: 0,
+      style: {
+        fontSize: '14px',
+        color:'#F5A623',
+      }
+    }
+  };
+  
+  var chartSpark1 = new ApexCharts(spark1DivHook, optionsSpark2);
+  if(spark1DivHook.childNodes.length == 0){
+    chartSpark1.render();
+  }
+}
+
 function donutGraphCreate(items){
   var donutDivHook = document.getElementById('chartDonut');
   var optionsDonut = {
@@ -151,8 +341,11 @@ function donutGraphCreate(items){
     legend: {
       show: true,
       labels: {
-          useSeriesColors: true
+          useSeriesColors: true,
       },
+      position: 'bottom',
+      horizontalAlign: 'center', 
+      floating: false,
     },
     chart: {
       type: 'donut',
@@ -173,29 +366,30 @@ function donutGraphCreate(items){
       theme: 'dark',
     },
     title: {
-      text: 'Categorized monthly epxenses',
+      text: 'Categorized monthly epxenses (PLN)',
+      align: 'center',
       offsetX: 0,
       style: {
-        fontSize: '24px',
+        fontSize: '22px',
         color:'#FFFFFF',
       }
     },
   };
-  var chartDonut = new ApexCharts(document.querySelector("#chartDonut"), optionsDonut);
+  var chartDonut = new ApexCharts(donutDivHook, optionsDonut);
   if(donutDivHook.childNodes.length == 0){
     chartDonut.render();
-  }else{
-    chartDonut.updateSeries([{
-      data: Object.values(items),
-    }])
-    chartDonut.updateOptions({
-      labels: Object.keys(items)
-    })
   }
+  // else{
+  //   chartDonut.updateSeries([{
+  //     data: Object.values(items),
+  //   }])
+  //   chartDonut.updateOptions({
+  //     labels: Object.keys(items)
+  //   })
+  // }
 }
 
 function generateListItem(item){
-
   return(`<li class="expense-element" id="element-${item.id}">
       <div class="expense-element_name">
         <h3 class="expense-element_name_name">${item.name}</h3>
@@ -291,7 +485,6 @@ function changeExpenseFormHandler(id){
     showAlertInfo("Your expense updated successfully!",'success',null);
     loadAllData();
   });
-  
 }
 
 changeExpenseForm.addEventListener("submit", function(e){
@@ -376,60 +569,52 @@ var optionsColumns = {
     },
 }
 
-var optionsSpark3 = {
-    series: [{
+var optionsSpark1 = {
+  series: [{
     data: [30,40,45,50,49,60,70,91,125]
-}],
-    chart: {
-    type: 'area',
-    height: 160,
-    sparkline: {
-    enabled: true
-    },
-},
-stroke: {
-    curve: 'straight'
-},
-fill: {
-    opacity: 0.3
-},
-xaxis: {
-    crosshairs: {
-    width: 1
-    },
-},
-yaxis: {
-    min: 0
-},
-title: {
-    text: '$135,965',
-    offsetX: 0,
-    style: {
-    fontSize: '24px',
-    color:'#FFFFFF',
-    }
-},
-tooltip: {
-  enabled: true,
-  theme: 'dark',
-},
-subtitle: {
-    text: 'Profits',
-    offsetX: 0,
-    style: {
-    fontSize: '14px',
-    color:'#F5A623',
-    }
-}
+  }],
+  chart: {
+  type: 'area',
+  height: 160,
+  sparkline: {
+  enabled: true
+  },
+  },
+  stroke: {
+      curve: 'straight'
+  },
+  fill: {
+      opacity: 0.3
+  },
+  xaxis: {
+      crosshairs: {
+      width: 1
+      },
+  },
+  yaxis: {
+      min: 0
+  },
+  title: {
+      text: '$135,965',
+      offsetX: 0,
+      style: {
+      fontSize: '24px',
+      color:'#FFFFFF',
+      }
+  },
+  tooltip: {
+    enabled: true,
+    theme: 'dark',
+  },
+  subtitle: {
+      text: 'Profits',
+      offsetX: 0,
+      style: {
+      fontSize: '14px',
+      color:'#F5A623',
+      }
+  }
 };
 
-
-var chartSpark1 = new ApexCharts(document.querySelector("#chartSpark1"), optionsSpark3);
-var chartSpark2 = new ApexCharts(document.querySelector("#chartSpark2"), optionsSpark3);
-// var chartSpark3 = new ApexCharts(document.querySelector("#chartSpark3"), optionsSpark3);
 var chartColumns = new ApexCharts(document.querySelector("#chartColumns"), optionsColumns);
-
-chartSpark1.render();
-chartSpark2.render();
-// chartSpark3.render();
 chartColumns.render();

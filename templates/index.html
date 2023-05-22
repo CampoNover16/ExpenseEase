@@ -64,15 +64,12 @@
         <div id="chartColumns"></div>
       </div>
     </div>
-    <div class="d-flex justify-content-center align-items-center">
+    <div class="d-flex justify-content-center align-items-center">   
+      {% include 'expenses-table.html' %}
       <button type="button" class="add-expense " data-bs-toggle="modal" data-bs-target="#modalCenter">Add Expense</button>
       <div class="graph-holder">
         <div id="chartDonut"></div>
       </div>
-      {% include 'expenses-table.html' %}
-    </div>
-    <div class="all-expenses-box">
-      <button id="load-data">Load</button>
     </div>
   </div>
 </div>
