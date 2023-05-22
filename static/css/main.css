@@ -189,17 +189,6 @@ body{
     border-left: 2px solid var(--accent);
 }
 
-.add-expense{
-    background-color: var(--secondary);
-    height: 75px;
-    width: 200px;
-    border-radius: 15px;
-    color: var(--text-color);
-    font-size: 1.5rem; 
-    text-align: center;
-    font-weight: 600;
-}
-
 .modal-content {
     -webkit-border-radius: 15px !important;
     -moz-border-radius: 15px !important;
@@ -292,6 +281,7 @@ body{
 .tab2,
 .tab3,
 .tab4{
+    position: relative;
     padding: 15px;
     display: none;
 }
@@ -367,4 +357,45 @@ body{
     justify-content: space-around;
     align-items: center;
     width: 30%;
+}
+
+.add-expense-holder{
+    display: flex;
+    align-items: center;
+    position: absolute;
+    top: -65px;
+    right: 0;
+    height: 50px;
+    width: auto;
+    padding: 10px;
+    background-color: var(--secondary);
+    border-radius: 15px;
+}
+
+.add-expense-holder .icon{
+    background-image: url("../images/script-plus-icon.svg");
+    background-repeat: no-repeat;
+    background-size: contain;
+    width: 40px;
+    height: 40px;
+}
+
+.add-expense-holder .add-expense{
+    color: var(--text-color);
+    font-size: 16px;
+    text-align: center;
+    font-weight: 600;
+}
+
+.add-expense-holder:hover{
+    border: 1px solid var(--accent);
+    cursor: pointer;
+}
+
+.add-expense-holder:hover .icon{
+    background-image: url("../images/script-plus-active-icon.svg");
+}
+
+.add-expense-holder:hover .add-expense{
+    color: var(--accent);
 }
