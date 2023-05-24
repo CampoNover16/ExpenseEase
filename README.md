@@ -42,6 +42,11 @@ To install session
 pip install Flask-Session
 ```
 
+To install XlsxWriter
+```pip
+pip install XlsxWriter
+```
+
 And after that your project is ready to run. To make that simply run command
 ```pip
 python app.py

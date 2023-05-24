@@ -379,14 +379,6 @@ function donutGraphCreate(items){
   if(donutDivHook.childNodes.length == 0){
     chartDonut.render();
   }
-  // else{
-  //   chartDonut.updateSeries([{
-  //     data: Object.values(items),
-  //   }])
-  //   chartDonut.updateOptions({
-  //     labels: Object.keys(items)
-  //   })
-  // }
 }
 
 function generateListItem(item){
@@ -618,3 +610,60 @@ var optionsSpark1 = {
 
 var chartColumns = new ApexCharts(document.querySelector("#chartColumns"), optionsColumns);
 chartColumns.render();
+
+var raport_generator = document.getElementById("raport_generator");
+raport_generator.addEventListener(event, getDateForUsersBoardData(), { once: true });
+
+function createOptionsForSelect(data, target_element){
+  console.log(target_element.name);
+  data.forEach(element => {
+    let newOption = document.createElement("option");
+    if(target_element.name == 'date-select'){
+      newOption.text = monthNames[element.month] + ' ' + element.year;
+      newOption.value = element.month + ' ' + element.year;
+    }
+    target_element.appendChild(newOption);
+  }) 
+}
+
+function getDateForUsersBoardData(){
+  var raport_date_select = document.getElementById("raport-date-select");
+  fetch("/getDateForUsersBoardData", {
+    method: "GET",
+    headers: {"Content-Type": "application/json"},
+  }).then((response) => {
+    response.json().then((data)=>{
+      createOptionsForSelect(data, raport_date_select)
+    })
+  });
+}
+
+async function exportExcel() {
+  var dateSelect = document.getElementById("raport-date-select");
+  if(dateSelect.value == "select-default"){
+    showAlertInfo("Select month and year before raport generation request!",'danger',null);
+  }else{
+    var temp_dataSelect = dateSelect.value
+    var dataSelectArray = temp_dataSelect.split(' ');
+    var data = {month: parseInt(dataSelectArray[0]), year: parseInt(dataSelectArray[1])}
+
+    let response = await fetch("/download_excel_api", {
+      method: "POST",
+      headers: {"Content-Type": "application/json"},
+      body: JSON.stringify(data),
+    })
+    let blobResponse = await response.blob()
+    const fileName = 'expenses-raport_' + dataSelectArray[0] + '_' + dataSelectArray[1] + '.xlsx'
+    downloadExcelSilently(blobResponse, fileName)
+  }
+}
+function downloadExcelSilently(blobExcelFile, filename){
+  const url = window.URL.createObjectURL(blobExcelFile);
+  const hiddenAnchor = document.createElement("a");
+  hiddenAnchor.style.display = "none";
+  hiddenAnchor.href = url;
+  hiddenAnchor.download = filename;
+  document.body.appendChild(hiddenAnchor);
+  hiddenAnchor.click();
+  window.URL.revokeObjectURL(url);
+}

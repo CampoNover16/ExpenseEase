@@ -1,8 +1,10 @@
-from flask import Flask, render_template, request, redirect, url_for, session, flash, make_response,jsonify
+from flask import Flask, render_template, request, redirect, url_for, session, flash, make_response, jsonify, send_file
 from flask_session import Session
 from flask_mysqldb import MySQL
-from datetime import datetime,date
+from datetime import datetime
+from io import BytesIO
 import string, random
+import xlsxwriter
 
 app = Flask(__name__)
 
@@ -305,6 +307,107 @@ def saveUserBoardName():
             mysql.connection.commit()
             cursor.close()
     return {"message": message}
+
+@app.route('/getDateForUsersBoardData', methods=['GET'])
+def getDateForUsersBoardData():
+    user_id = session.get("user_id")
+    dataArray = []
+    if session.get("login"):
+        cursor = mysql.connection.cursor()
+        cursor.execute("SELECT `board_id` FROM `board_users` WHERE `user_id`=%s",(user_id,))
+        userBoard = cursor.fetchone()
+        if userBoard:
+            cursor.execute("SELECT DISTINCT(month),year FROM board_data WHERE board_id=%s ORDER BY month,year ASC",(userBoard[0],))
+            selectData = cursor.fetchall()
+            for data in selectData:
+                data = {"month": data[0], "year": data[1]}
+                dataArray.append(data)
+            mysql.connection.commit()
+            cursor.close()
+            res = make_response(jsonify(dataArray))
+        return res
+
+@app.route('/download_excel_api', methods=['POST','GET'])
+def downloadExcelApi():
+    req = request.get_json()
+    apiResponse = createApiResponse(req)
+    return apiResponse
+
+def createApiResponse(req):
+    bufferFile = writeBufferExcelFile(req)
+    mimetype='application/vnd.openxmlformats-officedocument.spreadsheetml.sheet'
+    return send_file(bufferFile,mimetype=mimetype)
+
+def writeBufferExcelFile(req):
+    user_id = session.get("user_id")
+    cursor = mysql.connection.cursor()
+    cursor.execute("SELECT `board_id` FROM `board_users` WHERE `user_id`=%s",(user_id,))
+    userboardId = cursor.fetchone()
+    if userboardId:
+        cursor.execute("SELECT * FROM `board_data` WHERE `board_id`=%s and `month`=%s and `year`=%s ORDER BY day, month ASC",(userboardId[0],req['month'],req['year']))
+        boardData = cursor.fetchall()
+        cursor.execute("SELECT category, SUM(value) FROM board_data WHERE board_id=%s and month=%s and year=%s GROUP BY category;",(userboardId[0],req['month'],req['year']))
+        categoryResults = cursor.fetchall()
+        cursor.execute("SELECT day, CAST(AVG(value) AS DECIMAL(5, 2)) FROM board_data WHERE board_id=%s and month=%s and year=%s GROUP BY day;",(userboardId[0],req['month'],req['year']))
+        dailyResults = cursor.fetchall()
+        if boardData:
+            buffer = BytesIO()
+            workbook = xlsxwriter.Workbook(buffer)
+            worksheet = workbook.add_worksheet()
+
+            bold = workbook.add_format({'bold': True})
+            format1 = workbook.add_format({'num_format': '@'})
+
+            worksheet.set_column('A:A', 20)
+            worksheet.set_column('C:C', 15)
+            worksheet.set_column('D:D', 15)
+            worksheet.set_column('F:F', 17)
+            worksheet.set_column('I:I', 20)
+
+            worksheet.write('A1', 'Name', bold)
+            worksheet.write('B1', 'Cost', bold)
+            worksheet.write('C1', 'Category', bold)
+            worksheet.write('D1', 'Date', bold)
+            worksheet.write('F1', 'Category expenses', bold)
+            worksheet.write('G1', 'Cost', bold)
+
+            row = 1
+            col = 0
+            # TO DO
+            # when column about income in db will be added calculate sum based on category (income/expense) name
+            sumIncome = 0
+            sumExpenses = 0
+            for items in (boardData):
+                date = datetime(items[7], items[6], items[5], 0, 0, 0)
+                worksheet.write(row, col, items[2], format1)
+                worksheet.write(row, col + 1, items[3])
+                worksheet.write(row, col + 2, items[4])
+                worksheet.write(row, col + 3, date.strftime("%Y/%m/%d"))
+                sumExpenses += items[3]
+                row += 1
+
+            row2 = 1
+            col2 = 5
+            for items2 in (categoryResults):
+                worksheet.write(row2, col2, items2[0], format1)
+                worksheet.write(row2, col2+1, items2[1])
+                row2 += 1
+            
+            avgDaily = 0
+            for item3 in (dailyResults):
+                avgDaily += int(item3[1])
+            avgDaily = avgDaily/len(dailyResults)
+
+            worksheet.write('I2', 'Total incomes', bold)
+            worksheet.write('I3', 'Total expenses', bold)
+            worksheet.write('I4', 'AVG daily expenses', bold)
+            worksheet.write('J2', sumIncome)
+            worksheet.write('J3', sumExpenses)
+            worksheet.write('J4', avgDaily)
+            workbook.close()
+            buffer.seek(0)  
+            
+            return buffer   
 
 @app.route('/logout')
 def logout():    
