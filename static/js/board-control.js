@@ -123,6 +123,7 @@ function loadAllData(){
     response.json().then((data)=>{
       calculateExpensesByCategory(data);
       calculateExpensesFromCurrentMonth(data);
+      showExpensesFromCurrentAndPreviouseMonth(data)
       data.forEach((item) => {
         html += generateListItem(item);
       })
@@ -162,6 +163,15 @@ function calculateExpensesByCategory(items){
   donutGraphCreate(finalPercentage);
 }
 
+function showExpensesFromCurrentAndPreviouseMonth(items){
+  const currMonthExpenses = calculateExpensesFromCurrentMonth(items);
+  const prevMonthExpenses = calculateExpensesFromPreviousMonth(items);
+
+
+  console.log(currMonthExpenses);
+  console.log(prevMonthExpenses);
+}
+
 function calculateExpensesFromCurrentMonth(items){
   const uniqueDate = [...new Set(items.map(item => item.date))];
   const finalDailyExpenses = {};
@@ -180,6 +190,7 @@ function calculateExpensesFromCurrentMonth(items){
     finalDailyExpenses[date] = sum.toFixed(2);
   })
   currentMothSparkGraphCreate(finalDailyExpenses, sumOfAll);
+  return finalDailyExpenses;
 }
 
 function currentMothSparkGraphCreate(items, sum){
@@ -265,6 +276,7 @@ function calculateExpensesFromPreviousMonth(items){
     finalDailyExpenses[date] = sum.toFixed(2);
   })
   previousMothSparkGraphCreate(finalDailyExpenses, sumOfAll);
+  return finalDailyExpenses;
 }
 
 
@@ -387,6 +399,10 @@ function donutGraphCreate(items){
   //     labels: Object.keys(items)
   //   })
   // }
+}
+
+function compareMonthsGraphCreate(){
+
 }
 
 function generateListItem(item){
