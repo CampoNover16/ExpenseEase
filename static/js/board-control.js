@@ -178,14 +178,18 @@ function calculateExpensesFromCurrentMonth(items){
   var sumOfAll = 0;
 
   items.forEach((item) => {
-    sumOfAll += item.price;
+    if(item.data_type == 1){
+      sumOfAll += item.price;
+    }
   })
 
   uniqueDate.forEach(date => {
     const filteredByDate = items.filter(item => item.date == date);
     let sum = 0;
-    filteredByDate.forEach((temp1)=>{
-      sum += temp1.price;
+    filteredByDate.forEach((item)=>{
+      if(item.data_type == 1){
+        sum += item.price;
+      }
     });
     finalDailyExpenses[date] = sum.toFixed(2);
   })
@@ -264,14 +268,18 @@ function calculateExpensesFromPreviousMonth(items){
   var sumOfAll = 0;
 
   items.forEach((item) => {
-    sumOfAll += item.price;
+    if(item.data_type == 1){
+      sumOfAll += item.price;
+    }
   })
 
   uniqueDate.forEach(date => {
     const filteredByDate = items.filter(item => item.date == date);
     let sum = 0;
-    filteredByDate.forEach((temp1)=>{
-      sum += temp1.price;
+    filteredByDate.forEach((item)=>{
+      if(item.data_type == 1){
+        sum += item.price;
+      }
     });
     finalDailyExpenses[date] = sum.toFixed(2);
   })
@@ -666,7 +674,6 @@ var raport_generator = document.getElementById("raport_generator");
 raport_generator.addEventListener(event, getDateForUsersBoardData(), { once: true });
 
 function createOptionsForSelect(data, target_element){
-  console.log(target_element.name);
   data.forEach(element => {
     let newOption = document.createElement("option");
     if(target_element.name == 'date-select'){

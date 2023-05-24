@@ -348,7 +348,7 @@ def writeBufferExcelFile(req):
     if userboardId:
         cursor.execute("SELECT * FROM `board_data` WHERE `board_id`=%s and `month`=%s and `year`=%s ORDER BY day, month ASC",(userboardId[0],req['month'],req['year']))
         boardData = cursor.fetchall()
-        cursor.execute("SELECT category, SUM(value) FROM board_data WHERE board_id=%s and month=%s and year=%s GROUP BY category;",(userboardId[0],req['month'],req['year']))
+        cursor.execute("SELECT category, SUM(value) FROM board_data WHERE board_id=%s and month=%s and year=%s and data_type=1 GROUP BY category;",(userboardId[0],req['month'],req['year']))
         categoryResults = cursor.fetchall()
         cursor.execute("SELECT day, CAST(AVG(value) AS DECIMAL(5, 2)) FROM board_data WHERE board_id=%s and month=%s and year=%s GROUP BY day;",(userboardId[0],req['month'],req['year']))
         dailyResults = cursor.fetchall()
@@ -362,34 +362,41 @@ def writeBufferExcelFile(req):
 
             worksheet.set_column('A:A', 20)
             worksheet.set_column('C:C', 15)
-            worksheet.set_column('D:D', 15)
-            worksheet.set_column('F:F', 17)
-            worksheet.set_column('I:I', 20)
+            worksheet.set_column('E:E', 15)
+            worksheet.set_column('G:G', 17)
+            worksheet.set_column('J:J', 20)
 
             worksheet.write('A1', 'Name', bold)
             worksheet.write('B1', 'Cost', bold)
             worksheet.write('C1', 'Category', bold)
-            worksheet.write('D1', 'Date', bold)
-            worksheet.write('F1', 'Category expenses', bold)
-            worksheet.write('G1', 'Cost', bold)
+            worksheet.write('D1', '+/-', bold)
+            worksheet.write('E1', 'Date', bold)
+            worksheet.write('G1', 'Category expenses', bold)
+            worksheet.write('H1', 'Cost', bold)
 
             row = 1
             col = 0
-            # TO DO
-            # when column about income in db will be added calculate sum based on category (income/expense) name
+
             sumIncome = 0
             sumExpenses = 0
             for items in (boardData):
-                date = datetime(items[7], items[6], items[5], 0, 0, 0)
+                date = datetime(items[8], items[7], items[6], 0, 0, 0)
                 worksheet.write(row, col, items[2], format1)
                 worksheet.write(row, col + 1, items[3])
                 worksheet.write(row, col + 2, items[4])
-                worksheet.write(row, col + 3, date.strftime("%Y/%m/%d"))
-                sumExpenses += items[3]
+
+                if(items[5] == 1):
+                    worksheet.write(row, col + 3, 'Expense')
+                    sumExpenses += items[3]
+                else:
+                    worksheet.write(row, col + 3, 'Income')
+                    sumIncome += items[3]
+
+                worksheet.write(row, col + 4, date.strftime("%Y/%m/%d"))
                 row += 1
 
             row2 = 1
-            col2 = 5
+            col2 = 6
             for items2 in (categoryResults):
                 worksheet.write(row2, col2, items2[0], format1)
                 worksheet.write(row2, col2+1, items2[1])
@@ -400,16 +407,18 @@ def writeBufferExcelFile(req):
                 avgDaily += int(item3[1])
             avgDaily = avgDaily/len(dailyResults)
 
-            worksheet.write('I2', 'Total incomes', bold)
-            worksheet.write('I3', 'Total expenses', bold)
-            worksheet.write('I4', 'AVG daily expenses', bold)
-            worksheet.write('J2', sumIncome)
-            worksheet.write('J3', sumExpenses)
-            worksheet.write('J4', avgDaily)
+            worksheet.write('J2', 'Total incomes', bold)
+            worksheet.write('J3', 'Total expenses', bold)
+            worksheet.write('J4', 'AVG daily expenses', bold)
+            worksheet.write('J5', 'Total cash flow', bold)
+            worksheet.write('K2', sumIncome)
+            worksheet.write('K3', sumExpenses)
+            worksheet.write('K4', avgDaily)
+            worksheet.write('K5', sumIncome + sumExpenses)
             workbook.close()
             buffer.seek(0)  
             
-            return buffer   
+            return buffer
 
 @app.route('/logout')
 def logout():    
