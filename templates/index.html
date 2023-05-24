@@ -89,15 +89,33 @@
             <label for="expense-price" class="col-form-label">Price:</label>
             <input type="number" class="form-control" id="expense-change-price" required>
           </div>
-            <div class="form-group">
-              <label for="expense-category" class="col-form-label">Category:</label>
-                <select class="form-control" id="expense-change-category" required>
-                  <option>Home</option>
-                  <option>Food</option>
-                  <option>Entertainment</option>
-                  <option>Car</option>
-                </select>
-            </div>
+          <div class="form-check">
+            <input class="form-check-input " type="radio" id="expenseRadioChange" name="category" value="1" onclick="toggleCategories()">
+            <label class="form-check-label" for="expenseRadioChange">
+              Expense
+            </label>
+          </div>
+          <div class="form-check">
+            <input class="form-check-input " type="radio" id="incomeRadioChange" name="category" value="0" onclick="toggleCategories()">
+            <label class="form-check-label" for="incomeRadioChange">
+              Income
+            </label>
+          </div>
+          <div class="form-group">
+            <label for="expense-change-category" class="col-form-label">Category:</label>
+            <select class="form-select" id="expense-change-category" style="display: none;">
+              <option>Home</option>
+              <option>Food</option>
+              <option>Entertainment</option>
+              <option>Car</option>
+            </select>
+            
+            <select class="form-select" id="income-change-category" style="display: none;">
+              <option value="salary">Salary</option>
+              <option value="freelance">Freelance</option>
+              <option value="investment">Investment</option>
+            </select>
+          </div>
           <div class="form-group">
             <label for="expense-date" class="col-form-label">Date:</label>
             <input type="date" class="form-control" id="expense-change-date" required>
@@ -128,14 +146,32 @@
             <label for="expense-price" class="col-form-label">Price:</label>
             <input type="number" class="form-control" id="expense-price" required>
           </div>
+            <div class="form-check">
+              <input class="form-check-input " type="radio" id="expenseRadio" name="category" value="1" onclick="toggleCategories()">
+              <label class="form-check-label" for="expenseRadio">
+                Expense
+              </label>
+            </div>
+            <div class="form-check">
+              <input class="form-check-input " type="radio" id="incomeRadio" name="category" value="0" onclick="toggleCategories()">
+              <label class="form-check-label" for="incomeRadio">
+                Income
+              </label>
+            </div>
             <div class="form-group">
               <label for="expense-category" class="col-form-label">Category:</label>
-                <select class="form-control" id="expense-category" required>
-                  <option>Home</option>
-                  <option>Food</option>
-                  <option>Entertainment</option>
-                  <option>Car</option>
-                </select>
+              <select class="form-select" id="expense-category" style="display: none;">
+                <option>Home</option>
+                <option>Food</option>
+                <option>Entertainment</option>
+                <option>Car</option>
+              </select>
+              
+              <select class="form-select" id="income-category" style="display: none;">
+                <option value="salary">Salary</option>
+                <option value="freelance">Freelance</option>
+                <option value="investment">Investment</option>
+              </select>
             </div>
           <div class="form-group">
             <label for="expense-date" class="col-form-label">Date:</label>
@@ -217,6 +253,25 @@
   const changeModal = document.getElementById("modalChangeCenter");
   const addExpenseForm = document.getElementById("add-expense-form");
   const changeExpenseForm = document.getElementById("change-expense-form");
+
+  function toggleCategories() {
+      var expenseSelect = document.getElementById("expense-category");
+      var expenseSelectChange = document.getElementById("expense-change-category");
+      var incomeSelect = document.getElementById("income-category");
+      var incomeSelectChange = document.getElementById("income-change-category");
+      
+      if (document.getElementById("expenseRadio").checked || document.getElementById("expenseRadioChange").checked) {
+        expenseSelect.style.display = "block";
+        expenseSelectChange.style.display = "block";
+        incomeSelect.style.display = "none";
+        incomeSelectChange.style.display = "none";
+      } else if (document.getElementById("incomeRadio").checked || document.getElementById("incomeRadioChange").checked) {
+        expenseSelect.style.display = "none";
+        expenseSelectChange.style.display = "none";
+        incomeSelect.style.display = "block";
+        incomeSelectChange.style.display = "block";
+      }
+    }
 
   function showAlertInfo(msg,category,modalId){
     var navbar = document.getElementById('navbar');

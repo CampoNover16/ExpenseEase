@@ -183,7 +183,7 @@ def addExpense():
        cursor = mysql.connection.cursor() 
        cursor.execute("SELECT `board_id` FROM `board_users` WHERE `user_id`=%s",(user_id,))
        userboardId = cursor.fetchone()
-       cursor.execute("INSERT INTO `board_data`(`board_id`, `param`, `value`,`category`, `day`, `month`, `year`, `created`, `modified`) VALUES (%s,%s,%s,%s,%s,%s,%s,%s,%s)",(userboardId[0],req['name'],req['price'],req['category'],day,month,year,createDate,createDate))
+       cursor.execute("INSERT INTO `board_data`(`board_id`, `param`, `value`,`category`,`data_type`, `day`, `month`, `year`, `created`, `modified`) VALUES (%s,%s,%s,%s,%s,%s,%s,%s,%s,%s)",(userboardId[0],req['name'],req['price'],req['category'],req['expenseOrIncome'],day,month,year,createDate,createDate))
        mysql.connection.commit()
     return {"message": message}
 
@@ -198,7 +198,7 @@ def changeExpense():
     if session.get("login"):
         if (request.method == 'POST'):
             cursor = mysql.connection.cursor()
-            cursor.execute("UPDATE `board_data` SET `param`=%s,`value`=%s,`category`=%s,`day`=%s,`month`=%s,`year`=%s,`modified`=%s WHERE `id`=%s",(req['name'],req['price'],req['category'],day,month,year,updateDate,req['id']))
+            cursor.execute("UPDATE `board_data` SET `param`=%s,`value`=%s,`category`=%s,`data_type`=%s,`day`=%s,`month`=%s,`year`=%s,`modified`=%s WHERE `id`=%s",(req['name'],req['price'],req['category'],req['expenseOrIncome'],day,month,year,updateDate,req['id']))
             mysql.connection.commit()
 
     return {"message": message}
@@ -212,11 +212,12 @@ def getExpense():
         cursor = mysql.connection.cursor()
         cursor.execute("SELECT * FROM `board_data` WHERE `id`=%s",(req,))
         data = cursor.fetchone()
-        expenseDate =("%s-%s-%s" % (data[5],data[6],data[7]))
+        expenseDate =("%s-%s-%s" % (data[6],data[7],data[8]))
         expense = {
             "id": data[0],
             "name": data[2],
             "category": data[4],
+            "data_type": data[5],
             "price": data[3],
             "date": expenseDate
         }
@@ -253,11 +254,12 @@ def getAllExpenses():
         cursor.execute("SELECT * FROM `board_data` WHERE `board_id`=%s and `month`=%s and `year`=%s ORDER BY day",(userboardId[0],current_month,current_year))
         boardData = cursor.fetchall()
         for data in boardData:
-            expenseDate =("%s-%s-%s" % (data[5],data[6],data[7]))
+            expenseDate =("%s-%s-%s" % (data[6],data[7],data[8]))
             expense = {
                 "id": data[0],
                 "name": data[2],
                 "category": data[4],
+                "data_type": data[5],
                 "price": data[3],
                 "date": expenseDate
             }

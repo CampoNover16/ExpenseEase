@@ -123,7 +123,7 @@ function loadAllData(){
     response.json().then((data)=>{
       calculateExpensesByCategory(data);
       calculateExpensesFromCurrentMonth(data);
-      showExpensesFromCurrentAndPreviouseMonth(data)
+      // showExpensesFromCurrentAndPreviouseMonth(data);
       data.forEach((item) => {
         html += generateListItem(item);
       })
@@ -163,14 +163,14 @@ function calculateExpensesByCategory(items){
   donutGraphCreate(finalPercentage);
 }
 
-function showExpensesFromCurrentAndPreviouseMonth(items){
-  const currMonthExpenses = calculateExpensesFromCurrentMonth(items);
-  const prevMonthExpenses = calculateExpensesFromPreviousMonth(items);
+// function showExpensesFromCurrentAndPreviouseMonth(items){
+//   const currMonthExpenses = calculateExpensesFromCurrentMonth(items);
+//   const prevMonthExpenses = calculateExpensesFromPreviousMonth(items);
 
 
-  console.log(currMonthExpenses);
-  console.log(prevMonthExpenses);
-}
+//   console.log(currMonthExpenses);
+//   console.log(prevMonthExpenses);
+// }
 
 function calculateExpensesFromCurrentMonth(items){
   const uniqueDate = [...new Set(items.map(item => item.date))];
@@ -436,10 +436,13 @@ function copyInviteContent(){
 }
 
 function loadExpenseHandler(id){
-  var date = document.getElementById('expense-change-date')
+  var date = document.getElementById('expense-change-date');
   var nameInput = document.getElementById("expense-change-name");
   var priceInput = document.getElementById("expense-change-price");
   var categoryInput = document.getElementById("expense-change-category");
+  var incomeCategoryInput = document.getElementById("income-change-category");
+  var incomeRadio = document.getElementById("incomeRadioChange");
+  var expenseRadio = document.getElementById("expenseRadioChange");
 
   changeExpenseForm.dataset.expenseId = id;
   
@@ -452,7 +455,15 @@ function loadExpenseHandler(id){
       response.json().then((data)=>{
         nameInput.value = data.name;
         priceInput.value = data.price;
-        categoryInput.value = data.category;
+        if(data.data_type == 0){
+          incomeRadio.checked = true;
+          incomeRadio.click();
+          incomeCategoryInput.value = data.category;
+        }else{
+          expenseRadio.checked = true;
+          expenseRadio.click();
+          categoryInput.value = data.category;
+        }
         var dateParts = data.date.split('-');
         date.valueAsDate = new Date(Date.UTC(dateParts[2],(dateParts[1]-1),dateParts[0]));
     })
@@ -473,8 +484,19 @@ function deleteExpenseHandler(id){
 function changeExpenseFormHandler(id){
   var name = document.getElementById("expense-change-name").value;
   var price = document.getElementById("expense-change-price").value;
-  var category = document.getElementById("expense-change-category").value;
+  var category = "";
   var date = document.getElementById("expense-change-date").value;
+  var incomeRadio = document.getElementById("incomeRadioChange");
+  var expenseRadio = document.getElementById("expenseRadioChange");
+  var expenseOrIncome = null;
+
+  if(expenseRadio.checked){
+    category = document.getElementById("expense-change-category").value;
+    expenseOrIncome = expenseRadio.value;
+  }else if(incomeRadio.checked){
+    category = document.getElementById("income-change-category").value;
+    expenseOrIncome = incomeRadio.value;
+  }
 
   var changeExpenseData = {
     id,
@@ -482,6 +504,7 @@ function changeExpenseFormHandler(id){
     price,
     category,
     date,
+    expenseOrIncome,
   }
 
   fetch("/changeExpense", {
@@ -503,14 +526,26 @@ changeExpenseForm.addEventListener("submit", function(e){
 function addExpenseFormHandler(){
   var name = document.getElementById("expense-name").value;
   var price = document.getElementById("expense-price").value;
-  var category = document.getElementById("expense-category").value;
+  var category = "";
   var date = document.getElementById("expense-date").value;
+  var incomeRadio = document.getElementById("incomeRadio");
+  var expenseRadio = document.getElementById("expenseRadio");
+  var expenseOrIncome = null;
+
+  if(expenseRadio.checked){
+    category = document.getElementById("expense-category").value;
+    expenseOrIncome = expenseRadio.value;
+  }else if(incomeRadio.checked){
+    category = document.getElementById("income-category").value;
+    expenseOrIncome = incomeRadio.value;
+  }
   
   var addExpenseData = {
     name,
     price,
     category,
     date,
+    expenseOrIncome,
   }
 
   fetch("/addExpense", {
