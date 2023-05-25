@@ -241,7 +241,7 @@ body{
 
 #expenses-table{
     width: 900px;
-    height: 425px;
+    height: 450px;
     background-color: var(--primary);
     border-radius: 15px;
 }
@@ -310,6 +310,14 @@ body{
     list-style: none;
     padding: none;
     margin: none;
+    overflow-y: scroll;
+    height: 350px;
+}
+
+.expenses-goals{
+    display: flex;
+    flex-direction: column;
+    align-items: center;
     overflow-y: scroll;
     height: 350px;
 }
@@ -398,4 +406,20 @@ body{
 
 .add-expense-holder:hover .add-expense{
     color: var(--accent);
+}
+
+.add-next-goal{
+    background-image: url('../images/circle-plus-icon.svg');
+    background-repeat: no-repeat;
+    background-size: contain;
+    width: 25px;
+    height: 25px;
+}
+
+#goals-table thead{
+    text-align: center;
+}
+
+#goals-tbody tr{
+    line-height: 38px;
 }

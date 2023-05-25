@@ -22,6 +22,7 @@ mysql = MySQL(app)
 @app.route('/')
 def index():
     second_user = None
+    goalsData = None
     users = 1
     if not session.get("login"):
         return redirect("/login")
@@ -34,9 +35,22 @@ def index():
             second_user = cursor.fetchone()
             if second_user:
                 users += 1
+            cursor.execute("SELECT end_month_saved, total_max_expense, daily_max_expense, food_max_expense, entertainment_max_expense, home_max_expense, car_max_expense FROM board_goals WHERE board_id=%s",(user_board[0],))
+            goalsBoardData = cursor.fetchone()
+            if goalsBoardData:
+                goalsData = {
+                    'end_month_saved':goalsBoardData[0],
+                    'total_max_expense':goalsBoardData[1],
+                    'daily_max_expense':goalsBoardData[2],
+                    'food_max_expense':goalsBoardData[3],
+                    'entertainment_max_expense':goalsBoardData[4],
+                    'home_max_expense':goalsBoardData[5],
+                    'car_max_expense':goalsBoardData[6]
+                }
+
         mysql.connection.commit()
         cursor.close()
-    return render_template('index.html', user=session, board=user_board, second_user = second_user, users_count = users)
+    return render_template('index.html', user=session, board=user_board, second_user = second_user, users_count = users, goals_data=goalsData)
 
 @app.route('/register', methods=['POST', 'GET'])
 def register():
@@ -419,6 +433,47 @@ def writeBufferExcelFile(req):
             buffer.seek(0)  
             
             return buffer
+
+@app.route('/setUsersBoardGoals', methods=['POST','GET'])    
+def setUsersBoardGoals():
+    user_id = session.get("user_id")
+    req = request.get_json()
+    stringUpdate = ""
+    
+    if session.get("login"):
+        cursor = mysql.connection.cursor()
+        cursor.execute("SELECT `board_id` FROM `board_users` WHERE `user_id`=%s",(user_id,))
+        userBoard = cursor.fetchone()
+        if userBoard:
+            cursor.execute("SELECT * FROM board_goals WHERE board_id=%s",(userBoard[0],))
+            goalsData = cursor.fetchone()
+            if not goalsData:
+                cursor.execute("INSERT INTO board_goals (board_id) VALUES(%s)",(userBoard[0],))
+                counter = 0
+                for key, value in req.items():
+                    if counter == 0:
+                        stringUpdate += key + '=' + value
+                    else:
+                        stringUpdate += ', ' + key + '=' + value
+                    counter += 1
+
+                cursor.execute("UPDATE board_goals SET "+stringUpdate+" WHERE board_id=%s",(userBoard[0],))  
+                mysql.connection.commit()
+                cursor.close()
+            else:
+                counter = 0
+                for key, value in req.items():
+                    if counter == 0:
+                        stringUpdate += key + '=' + value
+                    else:
+                        stringUpdate += ', ' + key + '=' + value
+                    counter += 1
+
+                cursor.execute("UPDATE board_goals SET "+stringUpdate+" WHERE board_id=%s",(userBoard[0],))     
+                mysql.connection.commit()
+                cursor.close()
+                res = make_response(jsonify(stringUpdate))
+            return res
 
 @app.route('/logout')
 def logout():    
