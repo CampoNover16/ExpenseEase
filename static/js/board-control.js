@@ -104,15 +104,7 @@ function saveBoardName() {
 
 window.onload = () => {
   loadAllData();
-  loadPreviousMonthData();
 };
-
-// loadBtn.addEventListener("click", function () {
-//   loadAllData();
-//   loadPreviousMonthData();
-// })
-
-changeModal.addEventListener("shown.bs.modal", function () {});
 
 modal.addEventListener("shown.bs.modal", function () {
   var isNameValid,
@@ -164,17 +156,6 @@ function loadAllData() {
   });
 }
 
-function loadPreviousMonthData() {
-  fetch("/getPreviousMonthExpenses", {
-    method: "GET",
-    headers: { "Content-Type": "application/json" },
-  }).then((response) => {
-    response.json().then((data) => {
-      calculateExpensesFromPreviousMonth(data);
-    });
-  });
-}
-
 function calculateExpensesByCategory(items) {
   const uniqueCategories = [...new Set(items.map((item) => item.category))];
   const finalPercentage = {};
@@ -198,7 +179,7 @@ function calculateExpensesByCategory(items) {
 }
 
 function showExpensesFromCurrentAndPreviouseMonth() {
-  fetch("/getAllMontlyExpenses", {
+  fetch("/getAllMonthlyExpenses", {
     method: "GET",
     headers: { "Content-Type": "application/json" },
   }).then((response) => {

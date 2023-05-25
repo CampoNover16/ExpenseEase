@@ -35,7 +35,7 @@ def index():
             second_user = cursor.fetchone()
             if second_user:
                 users += 1
-            cursor.execute("SELECT end_month_saved, total_max_expense, daily_max_expense, food_max_expense, entertainment_max_expense, home_max_expense, car_max_expense FROM board_goals WHERE board_id=%s",(user_board[0],))
+            cursor.execute("SELECT end_month_saved, total_max_expense, daily_max_expense, food_max_expense, entertainment_max_expense, home_max_expense, car_max_expense FROM board_goals WHERE board_id=%s and month=%s",(user_board[0],datetime.now().month))
             goalsBoardData = cursor.fetchone()
             if goalsBoardData:
                 goalsData = {
@@ -282,8 +282,8 @@ def getAllExpenses():
         res = make_response(jsonify(dataArray))
     return res
 
-@app.route('/getAllMontlyExpenses', methods=['POST','GET'])
-def getAllMontlyExpenses():
+@app.route('/getAllMonthlyExpenses', methods=['POST','GET'])
+def getAllMonthlyExpenses():
     user_id = session.get("user_id")
     monthNames = ["January","February","March","April","May","June","July","August","September","October","November","December"]
     incomeArray = []
@@ -313,35 +313,6 @@ def getAllMontlyExpenses():
 
         dataArray.append(incomeArray)
         dataArray.append(exenseArray)
-        mysql.connection.commit()
-        res = make_response(jsonify(dataArray))
-    return res
-
-@app.route('/getPreviousMonthExpenses', methods=['GET'])
-def getPreviousMonthExpenses():
-    user_id = session.get("user_id")
-    dataArray = []
-    current_month = datetime.now().month
-    current_year = datetime.now().year
-    if session.get("login"):
-        cursor = mysql.connection.cursor()
-        cursor.execute("SELECT `board_id` FROM `board_users` WHERE `user_id`=%s",(user_id,))
-        userboardId = cursor.fetchone()
-        # TO TEST
-        # I dont know how its going to be when current month will be january
-        cursor.execute("SELECT * FROM `board_data` WHERE `board_id`=%s and `month`=%s and `year`=%s ORDER BY day",(userboardId[0],current_month-1,current_year))
-        boardData = cursor.fetchall()
-        for data in boardData:
-            expenseDate =("%s-%s-%s" % (data[6],data[7],data[8]))
-            expense = {
-                "id": data[0],
-                "name": data[2],
-                "category": data[4],
-                "data_type": data[5],
-                "price": data[3],
-                "date": expenseDate
-            }
-            dataArray.append(expense)
         mysql.connection.commit()
         res = make_response(jsonify(dataArray))
     return res
@@ -474,6 +445,7 @@ def writeBufferExcelFile(req):
 def setUsersBoardGoals():
     user_id = session.get("user_id")
     req = request.get_json()
+    current_month = datetime.now().month
     stringUpdate = ""
     
     if session.get("login"):
@@ -481,10 +453,10 @@ def setUsersBoardGoals():
         cursor.execute("SELECT `board_id` FROM `board_users` WHERE `user_id`=%s",(user_id,))
         userBoard = cursor.fetchone()
         if userBoard:
-            cursor.execute("SELECT * FROM board_goals WHERE board_id=%s",(userBoard[0],))
+            cursor.execute("SELECT * FROM board_goals WHERE board_id=%s and month=%s",(userBoard[0], current_month))
             goalsData = cursor.fetchone()
             if not goalsData:
-                cursor.execute("INSERT INTO board_goals (board_id) VALUES(%s)",(userBoard[0],))
+                cursor.execute("INSERT INTO board_goals (board_id, month) VALUES(%s,%s)",(userBoard[0], current_month))
                 counter = 0
                 for key, value in req.items():
                     if counter == 0:
@@ -493,7 +465,7 @@ def setUsersBoardGoals():
                         stringUpdate += ', ' + key + '=' + value
                     counter += 1
 
-                cursor.execute("UPDATE board_goals SET "+stringUpdate+" WHERE board_id=%s",(userBoard[0],))  
+                cursor.execute("UPDATE board_goals SET "+stringUpdate+" WHERE board_id=%s and month=%s",(userBoard[0], current_month))  
                 mysql.connection.commit()
                 cursor.close()
             else:
@@ -505,7 +477,7 @@ def setUsersBoardGoals():
                         stringUpdate += ', ' + key + '=' + value
                     counter += 1
 
-                cursor.execute("UPDATE board_goals SET "+stringUpdate+" WHERE board_id=%s",(userBoard[0],))     
+                cursor.execute("UPDATE board_goals SET "+stringUpdate+" WHERE board_id=%s and month=%s",(userBoard[0], current_month))     
                 mysql.connection.commit()
                 cursor.close()
                 res = make_response(jsonify(stringUpdate))

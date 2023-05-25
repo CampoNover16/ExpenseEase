@@ -423,3 +423,17 @@ body{
 #goals-tbody tr{
     line-height: 38px;
 }
+
+::-webkit-scrollbar {
+    width: 10px;
+}
+  
+::-webkit-scrollbar-track {
+    background: var(--secondary);
+    border-radius: 15px;
+}
+
+::-webkit-scrollbar-thumb {
+    background: var(--accent); 
+    border-radius: 15px;
+}
