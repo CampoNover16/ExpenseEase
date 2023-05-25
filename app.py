@@ -282,6 +282,41 @@ def getAllExpenses():
         res = make_response(jsonify(dataArray))
     return res
 
+@app.route('/getAllMontlyExpenses', methods=['POST','GET'])
+def getAllMontlyExpenses():
+    user_id = session.get("user_id")
+    monthNames = ["January","February","March","April","May","June","July","August","September","October","November","December"]
+    incomeArray = []
+    exenseArray = []
+    dataArray = []
+    current_year = datetime.now().year
+    if session.get("login"):
+        cursor = mysql.connection.cursor()
+        cursor.execute("SELECT `board_id` FROM `board_users` WHERE `user_id`=%s",(user_id,))
+        userboardId = cursor.fetchone()
+        cursor.execute("SELECT month, sum(value) FROM `board_data` WHERE `board_id`=%s and `year`=%s and data_type=0 GROUP BY month;",(userboardId[0],current_year))
+        incomeData = cursor.fetchall()
+        cursor.execute("SELECT month, sum(value) FROM `board_data` WHERE `board_id`=%s and `year`=%s and data_type=1 GROUP BY month;",(userboardId[0],current_year))
+        expenseData = cursor.fetchall()
+        for data in incomeData:
+            income = {
+                "month": monthNames[data[0]],
+                "value": data[1]
+            }
+            incomeArray.append(income)
+        for data in expenseData:
+            expense = {
+                "month": monthNames[data[0]],
+                "value": data[1]
+            }
+            exenseArray.append(expense)
+
+        dataArray.append(incomeArray)
+        dataArray.append(exenseArray)
+        mysql.connection.commit()
+        res = make_response(jsonify(dataArray))
+    return res
+
 @app.route('/getPreviousMonthExpenses', methods=['GET'])
 def getPreviousMonthExpenses():
     user_id = session.get("user_id")

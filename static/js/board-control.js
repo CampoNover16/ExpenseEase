@@ -198,149 +198,86 @@ function calculateExpensesByCategory(items) {
 }
 
 function showExpensesFromCurrentAndPreviouseMonth() {
-  let currMonthExpenses = [];
-  let prevMonthExpenses = [];
-  const currMonthDailyExpenses = {};
-  const prevMonthDailyExpenses = {};
-
-  fetch("/getAllExpenses", {
+  fetch("/getAllMontlyExpenses", {
     method: "GET",
     headers: { "Content-Type": "application/json" },
   }).then((response) => {
     response.json().then((data) => {
-      currMonthExpenses = data;
+      createCompareMonthsChart(data[0],data[1]);
     });
   });
-
-  fetch("/getPreviousMonthExpenses", {
-    method: "GET",
-    headers: { "Content-Type": "application/json" },
-  }).then((response) => {
-    response.json().then((data) => {
-      prevMonthExpenses = data;
-    });
-  });
-
-  setTimeout(() => {
-    const uniqueCurrMonthDate = [
-      ...new Set(currMonthExpenses.map((expense) => expense.date)),
-    ];
-    const uniquePrevMonthDate = [
-      ...new Set(prevMonthExpenses.map((expense) => expense.date)),
-    ];
-
-    uniqueCurrMonthDate.forEach((date) => {
-      const filteredByDate = currMonthExpenses.filter(
-        (expense) => expense.date == date
-      );
-      let sum = 0;
-      filteredByDate.forEach((expense) => {
-        if (expense.data_type == 1) {
-          sum += expense.price;
-        }
-      });
-      currMonthDailyExpenses[date] = sum.toFixed(2);
-    });
-
-    uniquePrevMonthDate.forEach((date) => {
-      const filteredByDate = prevMonthExpenses.filter(
-        (expense) => expense.date == date
-      );
-      let sum = 0;
-      filteredByDate.forEach((expense) => {
-        if (expense.data_type == 1) {
-          sum += expense.price;
-        }
-      });
-      prevMonthDailyExpenses[date] = sum.toFixed(2);
-    });
-    createCompareMonthsChart(currMonthDailyExpenses,prevMonthDailyExpenses);
-  }, 100);
 }
 
-function createCompareMonthsChart(currMonth, prevMonth) {
+function createCompareMonthsChart(incomeArray, expenseArray) {
   var columnsChartDivHook = document.getElementById("chartColumns");
-  let dataForOptions = [];
-  const goal = {};
-  console.log(Object.keys(currMonth));
-  for(let day = 1; day <= 31; day++){ 
-    Object.keys(prevMonth).forEach((prevdate) => {
-      prevDateParts = prevdate.split("-");
-      if(prevDateParts[0] == day){
-        goal[day] = prevMonth[prevdate]; 
-      }
-    })
-  }
-  console.log(goal);
+  var rdyIncome = []
+  var rdyExpense = []
+  monthNames.forEach((item) => {
+    rdyIncome[item] = 0
+    rdyExpense[item] = 0
+  })
 
-  for(let day = 1; day <= 31; day++){ 
-    Object.keys(currMonth).forEach( date => {
-      dateParts = date.split("-");
-      if(dateParts[0] == day){
-        let data = {
-          x: day,
-          y: currMonth[date],
-          goals: [{
-            name: "Previous Month Day",
-            value: goal[day],
-            strokeHeight: 5,
-            strokeColor: "#775DD0",
-          },],
-        }
-        dataForOptions = [...dataForOptions,data]
-      }
-    })
+  incomeArray.forEach((item) => {
+    rdyIncome[item.month] = item.value
+    console.log(item.month);
+  })
 
-    
-  }
+  expenseArray.forEach((item) => {
+    rdyExpense[item.month] = item.value;
+  })
 
-  console.log(dataForOptions);
-
-  // [
-  //   {
-  //     x: "2011",
-  //     y: 1292,
-  //     goals: [
-  //       {
-  //         name: "Expected",
-  //         value: 1400,
-  //         strokeHeight: 5,
-  //         strokeColor: "#775DD0",
-  //       },
-  //     ],
-  //   },
-  // ],
   var optionsColumns = {
-    series: [
-      {
-        name: "Current Month Day",
-        data: dataForOptions
-      },
-    ],
+    series: [{
+        name: "Monthly expenses",
+        data: Object.values(rdyExpense)
+      },{
+        name: "Monthly incomes",
+        data: Object.values(rdyIncome)
+      }],
     xaxis: {
-      min: 1,
+      categories: Object.keys(rdyIncome),
+      labels: {
+        show: true,
+        style: {
+            colors: '#FFFFFF',
+            fontSize: '12px',
+            fontFamily: 'Helvetica, Arial, sans-serif',
+            fontWeight: 400,
+            cssClass: 'apexcharts-xaxis-label',
+        },
+      },
     },
-
+    yaxis: {
+      labels: {
+        show: true,
+        style: {
+            colors: '#FFFFFF',
+            fontSize: '12px',
+            fontFamily: 'Helvetica, Arial, sans-serif',
+            fontWeight: 400,
+            cssClass: 'apexcharts-xaxis-label',
+        },
+      },
+    },
     chart: {
       type: "bar",
+      stacked: true,
     },
-    plotOptions: {
-      // bar: {
-      //   columnWidth: "60%",
-      // },
-    },
-    colors: ["#00E396"],
-    dataLabels: {
-      enabled: false,
+    tooltip: {
+      enabled: true,
+      theme: "dark",
     },
     legend: {
       show: true,
-      showForSingleSeries: true,
-      customLegendItems: ["Current Month", "Previouse Month"],
-      markers: {
-        fillColors: ["#00E396", "#775DD0"],
+      labels: {
+        colors: '#FFFFFF',
+        useSeriesColors: true,
       },
     },
+    colors: ["#ff00ff","#00E396"],
+    dataLabels: {
+      enabled: false,
+    }
   };
 
   var chartColumns = new ApexCharts(
