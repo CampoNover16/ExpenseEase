@@ -155,7 +155,7 @@ function loadAllData() {
   }).then((response) => {
     response.json().then((data) => {
       calculateExpensesByCategory(data);
-      calculateExpensesFromCurrentMonth(data);
+      calculateCashFromCurrentMonth(data);
       data.forEach((item) => {
         html += generateListItem(item);
       });
@@ -219,7 +219,6 @@ function createCompareMonthsChart(incomeArray, expenseArray) {
 
   incomeArray.forEach((item) => {
     rdyIncome[item.month] = item.value
-    console.log(item.month);
   })
 
   expenseArray.forEach((item) => {
@@ -287,37 +286,47 @@ function createCompareMonthsChart(incomeArray, expenseArray) {
   chartColumns.render();
 }
 
-function calculateExpensesFromCurrentMonth(items) {
+function calculateCashFromCurrentMonth(items) {
   const uniqueDate = [...new Set(items.map((item) => item.date))];
+  const finalDailyIncomes = {};
   const finalDailyExpenses = {};
-  var sumOfAll = 0;
+  var sumOfAllIncomes = 0;
+  var sumOfAllExpenses = 0;
 
   items.forEach((item) => {
     if (item.data_type == 1) {
-      sumOfAll += item.price;
+      sumOfAllExpenses += item.price;
+    }else{
+      sumOfAllIncomes += item.price;
     }
   });
 
   uniqueDate.forEach((date) => {
     const filteredByDate = items.filter((item) => item.date == date);
-    let sum = 0;
+    let sumIncomes = 0;
+    let sumExpenses = 0;
+
     filteredByDate.forEach((item) => {
       if (item.data_type == 1) {
-        sum += item.price;
+        sumExpenses += item.price;
+      }else{
+        sumIncomes += item.price;
       }
     });
-    finalDailyExpenses[date] = sum.toFixed(2);
+    finalDailyIncomes[date] = sumIncomes.toFixed(2);
+    finalDailyExpenses[date] = sumExpenses.toFixed(2);
   });
-  currentMothSparkGraphCreate(finalDailyExpenses, sumOfAll);
+
+  currentMonthIncomesGraphCreate(finalDailyIncomes, sumOfAllIncomes);
+  currentMonthExpensesGraphCreate(finalDailyExpenses, sumOfAllExpenses);
 }
 
-function currentMothSparkGraphCreate(items, sum) {
+function currentMonthExpensesGraphCreate(items, sum) {
   const d = new Date();
   var spark2DivHook = document.getElementById("chartSpark2");
 
   var optionsSpark2 = {
-    series: [
-      {
+    series: [{
         name: "Daily total",
         data: Object.values(items),
       },
@@ -383,32 +392,7 @@ function currentMothSparkGraphCreate(items, sum) {
   }
 }
 
-function calculateExpensesFromPreviousMonth(items) {
-  const uniqueDate = [...new Set(items.map((item) => item.date))];
-  const finalDailyExpenses = {};
-  var sumOfAll = 0;
-
-  items.forEach((item) => {
-    if (item.data_type == 1) {
-      sumOfAll += item.price;
-    }
-  });
-
-  uniqueDate.forEach((date) => {
-    const filteredByDate = items.filter((item) => item.date == date);
-    let sum = 0;
-    filteredByDate.forEach((item) => {
-      if (item.data_type == 1) {
-        sum += item.price;
-      }
-    });
-    finalDailyExpenses[date] = sum.toFixed(2);
-  });
-  previousMothSparkGraphCreate(finalDailyExpenses, sumOfAll);
-  return finalDailyExpenses;
-}
-
-function previousMothSparkGraphCreate(items, sum) {
+function currentMonthIncomesGraphCreate(items, sum) {
   const d = new Date();
   var spark1DivHook = document.getElementById("chartSpark1");
 
@@ -461,8 +445,8 @@ function previousMothSparkGraphCreate(items, sum) {
     },
     subtitle: {
       text:
-        "Total expenses(" +
-        monthNames[d.getMonth() - 1] +
+        "Total incomes(" +
+        monthNames[d.getMonth()] +
         " " +
         d.getFullYear() +
         ")",
