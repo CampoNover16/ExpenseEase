@@ -842,3 +842,40 @@ function downloadExcelSilently(blobExcelFile, filename) {
   hiddenAnchor.click();
   window.URL.revokeObjectURL(url);
 }
+
+// function addNextGoalRow(){
+//   var goals_tbody = document.getElementById("goals-tbody");
+//   let rawHtml = "<tr><td style='width: 75%'>I don't want to exceed the expenses in the <strong style='color: var(--accent);'>[name]</strong> category over <strong style='color: var(--accent);'>[X PLN]</strong>.</td>" +
+//                 "<td><input type='text' class='form-control'></td>"+
+//                 "</tr>";
+//   goals_tbody.insertAdjacentHTML('beforeend',rawHtml);
+// }
+
+function setUserGoals(){
+  var endMonthSaved = document.getElementById("end_month_saved");
+  var totalMaxExpense = document.getElementById("total_max_expense");
+  var dailyMaxExpense = document.getElementById("daily_max_expense");
+  var foodMaxExpense = document.getElementById("food_max_expense");
+  var entertainmentMaxExpense = document.getElementById("entertainment_max_expense");
+  var homeMaxExpense = document.getElementById("home_max_expense");
+  var carMaxExpense = document.getElementById("car_max_expense");
+
+  var inputChecker = [endMonthSaved,totalMaxExpense,dailyMaxExpense,foodMaxExpense,entertainmentMaxExpense,homeMaxExpense,carMaxExpense]
+  var data = {}
+  inputChecker.forEach(element => {
+    if(element.value != '' && element.value > 0){
+      data[element.id] = element.value
+    }
+  })
+
+  fetch("/setUsersBoardGoals", {
+    method: "POST",
+    headers: {"Content-Type": "application/json"},
+    body: JSON.stringify(data),
+  }).then((response) => {
+    response.json().then((data)=>{
+      console.log(data);
+      showAlertInfo("Your goals has been set!",'success',null);
+    })
+  });
+}

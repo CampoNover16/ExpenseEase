@@ -10,44 +10,86 @@
         <div class="icon"></div>
         <div class="add-expense">Add Expense</div>
       </div>
-      
       <ul class="expenses-list" id="expenses-list"></ul>
     </div>
     <div class="tab tab2">
-      <table class="table table-primary">
-        <thead>
-          <tr>
-            <th scope="col">#</th>
-            <th scope="col">First</th>
-            <th scope="col">Last</th>
-            <th scope="col">Handle</th>
-          </tr>
-        </thead>
-        <tbody>
-          <tr>
-            <th scope="row">1</th>
-            <td>Mark</td>
-            <td>Otto</td>
-            <td>@mdo</td>
-          </tr>
-          <tr>
-            <th scope="row">2</th>
-            <td>Jacob</td>
-            <td>Thornton</td>
-            <td>@fat</td>
-          </tr>
-          <tr>
-            <th scope="row">3</th>
-            <td colspan="2">Larry the Bird</td>
-            <td>@twitter</td>
-          </tr>
-        </tbody>
-      </table>
+      <div class="expenses-goals">
+        <p style="text-align: center; color: var(--accent);"><strong>For better results you should set your goals only once in a month.</strong></p>
+        <table class="table table-dark" id="goals-table">
+          <thead>
+            <tr>
+              <th scope="col">Goal</th>
+              <th scope="col">Value</th>
+            </tr>
+          </thead>
+          <tbody id="goals-tbody">
+            <tr>
+              <td style="width: 75%">I want to save <strong style="color: var(--accent);">[X PLN]</strong> at the end of the month.</td>
+              <td><input type="number" class="form-control" id="end_month_saved" min="0"></td>
+            </tr>
+            <tr>
+              <td style="width: 75%">I don't want to exceed expenses up to <strong style="color: var(--accent);">[X PLN]</strong>.</td>
+              <td><input type="number" class="form-control" id="total_max_expense" min="0"></td>
+            </tr>
+            <tr>
+              <td style="width: 75%">I don't want to exceed the daily expenses over <strong style="color: var(--accent);">[X PLN]</strong>.</td>
+              <td><input type="number" class="form-control" id="daily_max_expense" min="0"></td>
+            </tr>
+            <tr>
+              <td style="width: 75%">I don't want to exceed the expenses in the <strong style="color: var(--accent);">Food</strong> category over <strong style="color: var(--accent);">[X PLN]</strong>.</td>
+              <td><input type="number" class="form-control" id="food_max_expense" min="0"></td>
+            </tr>
+            <tr>
+              <td style="width: 75%">I don't want to exceed the expenses in the <strong style="color: var(--accent);">Entertainment</strong> category over <strong style="color: var(--accent);">[X PLN]</strong>.</td>
+              <td><input type="number" class="form-control" id="entertainment_max_expense" min="0"></td>
+            </tr>
+            <tr>
+              <td style="width: 75%">I don't want to exceed the expenses in the <strong style="color: var(--accent);">Home</strong> category over <strong style="color: var(--accent);">[X PLN]</strong>.</td>
+              <td><input type="number" class="form-control" id="home_max_expense" min="0"></td>
+            </tr>
+            <tr>
+              <td style="width: 75%">I don't want to exceed the expenses in the <strong style="color: var(--accent);">Car</strong> category over <strong style="color: var(--accent);">[X PLN]</strong>.</td>
+              <td><input type="number" class="form-control" id="car_max_expense" min="0"></td>
+            </tr>
+          </tbody>
+        </table>
+        <!-- TO DO 
+        add dynamic select if previous category was used do not show it again + dynamic option list -->
+        <!-- <div onclick="addNextGoalRow()" class="btn btn-danger" style="display: flex; justify-content: center; gap: 5px; margin-bottom: 10px;">
+          <div class="add-next-goal" title="Add next goal"></div>
+          <div><span>Add next goal</span></div>
+        </div> -->
+        <button class="btn btn-primary" style="width: 150px;" onclick="setUserGoals()">Save you goals</button>
+      </div>
     </div>
-    <div class="tab tab3"></div>
+    <div class="tab tab3">
+      <div class="expenses-goals">
+        {% if board and goals_data['end_month_saved']: %}
+        <div>I want to save <strong style="color: var(--accent);">{{goals_data['end_month_saved']}} pln</strong> at the end of the month.</div>
+        {% endif %}
+        {% if board and goals_data['total_max_expense']: %}
+        <div>I don't want to exceed expenses up to <strong style="color: var(--accent);">{{goals_data['total_max_expense']}} pln</strong>.</div>
+        {% endif %}
+        {% if board and goals_data['daily_max_expense']: %}
+        <div>I don't want to exceed the daily expenses over <strong style="color: var(--accent);">{{goals_data['daily_max_expense']}} pln</strong>.</div>
+        {% endif %}
+        {% if board and goals_data['food_max_expense']: %}
+        <div>I don't want to exceed the expenses in the <strong style="color: var(--accent);">Food</strong> category over <strong style="color: var(--accent);">{{goals_data['food_max_expense']}} pln</strong>.</div>
+        {% endif %}
+        {% if board and goals_data['entertainment_max_expense']: %}
+        <div>I don't want to exceed the expenses in the <strong style="color: var(--accent);">Entertainment</strong> category over <strong style="color: var(--accent);">{{goals_data['entertainment_max_expense']}} pln</strong>.</div>
+        {% endif %}
+        {% if board and goals_data['home_max_expense']: %}
+        <div>I don't want to exceed the expenses in the <strong style="color: var(--accent);">Home</strong> category over <strong style="color: var(--accent);">{{goals_data['home_max_expense']}} pln</strong>.</div>
+        {% endif %}
+        {% if board and goals_data['car_max_expense']: %}
+        <div>I don't want to exceed the expenses in the <strong style="color: var(--accent);">Car</strong> category over <strong style="color: var(--accent);">{{goals_data['car_max_expense']}} pln</strong>.</div>
+        {% endif %}
+      </div>
+    </div>
     <div class="tab tab4" id="raport_generator">
       <div class="d-flex flex-column justify-content-center align-items-center" style="gap: 25px;">
-        <h2 style="text-align: center;">Generate expense raport from choosen month and year</h2>
+        <h2 style="text-align: center;">Generate expense raport from chosen month and year</h2>
         <span style="color: var(--accent)">
           In select <strong>"Date"</strong> down below are only dates where you actually have any data
         </span>
@@ -59,7 +101,7 @@
             </select>
           </div>
         </div>
-        <button class="btn btn-primary" onclick="exportExcel()" style="width: 150px;">Generate</button>
+        <button class="btn btn-primary" onclick="exportExcel()" style="width: 150px; margin-left: auto;">Generate</button>
       </div>
     </div>
 </div>
