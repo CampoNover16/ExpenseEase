@@ -283,11 +283,12 @@ def getPreviousMonthExpenses():
         cursor.execute("SELECT * FROM `board_data` WHERE `board_id`=%s and `month`=%s and `year`=%s ORDER BY day",(userboardId[0],current_month-1,current_year))
         boardData = cursor.fetchall()
         for data in boardData:
-            expenseDate =("%s-%s-%s" % (data[5],data[6],data[7]))
+            expenseDate =("%s-%s-%s" % (data[6],data[7],data[8]))
             expense = {
                 "id": data[0],
                 "name": data[2],
                 "category": data[4],
+                "data_type": data[5],
                 "price": data[3],
                 "date": expenseDate
             }
