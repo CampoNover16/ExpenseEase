@@ -35,7 +35,7 @@
             <a class="nav-link user-settings" href="#" id="navbarDropdown" role="button" data-bs-toggle="dropdown" aria-expanded="false"></a>
             <ul class="dropdown-menu" aria-labelledby="navbarDropdown">
               <li><a class="dropdown-item" href="#" data-bs-toggle="modal" data-bs-target="#userSettings">Settings</a></li>
-              <li><a class="dropdown-item" href="#">FAQ</a></li>
+              <!-- <li><a class="dropdown-item" href="#">FAQ</a></li> -->
               <li><hr class="dropdown-divider"></li>
               <li><a class="dropdown-item" href="/logout">Logout</a></li>
             </ul>
@@ -50,7 +50,7 @@
 {% include 'user-settings.html' %}
 <div class="expenses-container">
   <div class="d-flex flex-column">
-    <div class="d-flex justify-content-center">
+    <div class="d-flex justify-content-center graph-first-row">
       <div class="graph-holder">
         <div id="chartSpark1"></div>
       </div>
@@ -61,7 +61,7 @@
         <div id="chartColumns"></div>
       </div>
     </div>
-    <div class="d-flex justify-content-center align-items-center">   
+    <div class="d-flex justify-content-center align-items-center graph-second-row">   
       {% include 'expenses-table.html' %}
       <div class="graph-holder">
         <div id="chartDonut"></div>

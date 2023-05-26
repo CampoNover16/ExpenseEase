@@ -707,8 +707,6 @@ addExpenseForm.addEventListener("submit", function (e) {
   addExpenseForm.reset();
 });
 
-
-
 var raport_generator = document.getElementById("raport_generator");
 raport_generator.addEventListener(event, getDateForUsersBoardData(), {
   once: true,
@@ -779,14 +777,6 @@ function downloadExcelSilently(blobExcelFile, filename) {
   window.URL.revokeObjectURL(url);
 }
 
-// function addNextGoalRow(){
-//   var goals_tbody = document.getElementById("goals-tbody");
-//   let rawHtml = "<tr><td style='width: 75%'>I don't want to exceed the expenses in the <strong style='color: var(--accent);'>[name]</strong> category over <strong style='color: var(--accent);'>[X PLN]</strong>.</td>" +
-//                 "<td><input type='text' class='form-control'></td>"+
-//                 "</tr>";
-//   goals_tbody.insertAdjacentHTML('beforeend',rawHtml);
-// }
-
 function setUserGoals(){
   var endMonthSaved = document.getElementById("end_month_saved");
   var totalMaxExpense = document.getElementById("total_max_expense");
@@ -817,6 +807,11 @@ function setUserGoals(){
 
 function setValue(varName, value){
   window[varName] = value
+}
+
+let triggeredCheckUserGoals = false;
+function triggerCheckUserOnce(){
+  if(!triggeredCheckUserGoals) checkUserGoals();
 }
 
 function checkUserGoals(){
@@ -860,5 +855,7 @@ function checkUserGoals(){
       }
     }
   });
+
+  triggeredCheckUserGoals = true
 }
 
