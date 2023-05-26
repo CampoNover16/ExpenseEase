@@ -330,14 +330,15 @@ body{
     background-color: var(--secondary);
     border-radius: 15px;
     width: 90%;
-    padding: 10px;
+
     margin-bottom: 20px;
 }
 
 .expense-element_name{
     display: flex;
     flex-direction: column;
-    width: 40%;
+    width: 50%;
+    padding: 5px 0 5px 10px;
     
 }
 
@@ -346,27 +347,87 @@ body{
 }
 
 .expense-element_name_category{
+    color: var(--accent);
     margin: 0 !important;
 }
 
 .expense-element_price{
     display: flex;
-    justify-content: end;
+    justify-content: center;
     align-items: center;
     width: 15%;
+    font-weight: 600;
 }
 
 .expense-element_date{
     display: flex;
     align-items: end;
     width: 15%;
+    color: var(--accent);
+    padding-bottom: 5px;
 }
 
 .expense-element_options{
     display: flex;
-    justify-content: space-around;
+    width: 20%;
+}
+
+.change-expense-btn{
+    display: flex;
+    background-color: #00b341;
+    width: 50%;
+    justify-content: center;
     align-items: center;
-    width: 30%;
+}
+
+.change-expense-btn:hover{
+    border-color: var(--accent);
+}
+
+.change-icon{
+    background-image: url('../images/update-icon.svg');
+    background-repeat: no-repeat;
+    background-size: contain;
+    width: 36px;
+    height: 36px;
+}
+
+.change-expense-btn:hover .change-icon{
+    background-image: url('../images/update-active-icon.svg');
+    background-repeat: no-repeat;
+    background-size: contain;
+    width: 36px;
+    height: 36px;
+}
+
+.delete-expense-btn{
+    display: flex;
+    background-color: #ff2825;
+    width: 50%;
+    border-radius: 0 15px 15px 0;
+    justify-content: center;
+    align-items: center;
+
+}
+
+.delete-expense-btn:hover{
+    border-color: var(--accent);
+}
+
+.delete-icon{
+    background-image: url('../images/trash-icon.svg');
+    background-repeat: no-repeat;
+    background-size: contain;
+    width: 36px;
+    height: 36px;
+}
+
+.delete-expense-btn:hover .delete-icon{
+    background-image: url('../images/trash-active-icon.svg');
+    background-repeat: no-repeat;
+    background-size: contain;
+    width: 36px;
+    height: 36px;
 }
 
 .add-expense-holder{

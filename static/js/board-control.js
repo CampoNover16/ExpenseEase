@@ -544,8 +544,8 @@ function generateListItem(item) {
       ${item.price} PLN
     </div>
       <div class="expense-element_options">
-        <button onClick="loadExpenseHandler(${item.id})" data-bs-toggle="modal" data-bs-target="#modalChangeCenter"">Change</button>
-        <button onClick="deleteExpenseHandler(${item.id})">Delete</button>
+        <button class="change-expense-btn" onClick="loadExpenseHandler(${item.id})" data-bs-toggle="modal" data-bs-target="#modalChangeCenter""><div class="change-icon"></div></button>
+        <button class="delete-expense-btn" onClick="deleteExpenseHandler(${item.id})"><div class="delete-icon"></div></button>
       </div>
   </li>`;
 }
