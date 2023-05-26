@@ -21,6 +21,15 @@ const monthNames = [
   "December",
 ];
 
+//variables to goals
+  var end_month_saved = 0;
+  var total_max_expense = 0;
+  var daily_max_expense = 0;
+  var food_max_expense = 0;
+  var entertainment_max_expense = 0;
+  var home_max_expense = 0;
+  var car_max_expense = 0;
+
 function deleteUserBoard() {
   fetch("/deleteUserBoard", {
     method: "POST",
@@ -174,6 +183,16 @@ function calculateExpensesByCategory(items) {
       sum += temp1.price;
     });
     finalPercentage[category] = parseInt(sum);
+
+    if(category.toLowerCase() == 'food'){
+      setValue('food_max_expense', parseInt(sum)) 
+    }else if(category.toLowerCase() == 'entertainment'){
+      setValue('entertainment_max_expense', parseInt(sum))
+    }else if(category.toLowerCase() == 'home'){
+      setValue('home_max_expense', parseInt(sum))
+    }else if(category.toLowerCase() == 'car'){
+      setValue('car_max_expense', parseInt(sum))
+    }
   });
   donutGraphCreate(finalPercentage);
 }
@@ -274,6 +293,10 @@ function calculateCashFromCurrentMonth(items) {
   var sumOfAllIncomes = 0;
   var sumOfAllExpenses = 0;
 
+  //for checkUserGoals
+  var avgDailyExpenses = 0;
+  var counterItems = 0;
+
   items.forEach((item) => {
     if (item.data_type == 1) {
       sumOfAllExpenses += item.price;
@@ -296,10 +319,23 @@ function calculateCashFromCurrentMonth(items) {
     });
     finalDailyIncomes[date] = sumIncomes.toFixed(2);
     finalDailyExpenses[date] = sumExpenses.toFixed(2);
+
+    //for checkUserGoals
+    counterItems++
+    avgDailyExpenses += parseFloat(sumExpenses.toFixed(2));
   });
+
+  //for checkUserGoals
+  avgDailyExpenses = avgDailyExpenses/counterItems;
 
   currentMonthIncomesGraphCreate(finalDailyIncomes, sumOfAllIncomes);
   currentMonthExpensesGraphCreate(finalDailyExpenses, sumOfAllExpenses);
+
+  //for checkUserGoals
+  setValue('end_month_saved',sumOfAllIncomes-sumOfAllExpenses);
+  setValue('daily_max_expense',avgDailyExpenses);
+  setValue('total_max_expense',sumOfAllExpenses);
+ 
 }
 
 function currentMonthExpensesGraphCreate(items, sum) {
@@ -776,8 +812,55 @@ function setUserGoals(){
     body: JSON.stringify(data),
   }).then((response) => {
     response.json().then((data)=>{
-      console.log(data);
       showAlertInfo("Your goals has been set!",'success',null);
     })
   });
 }
+
+function setValue(varName, value){
+  window[varName] = value
+}
+
+function checkUserGoals(){
+  var board_end_month_saved = document.getElementById("curr_end_month_saved") != null ? document.getElementById("curr_end_month_saved").dataset.val : null;
+  var currentData_end_month_saved = end_month_saved;
+  var boardGoals = {
+    "total_max_expense": document.getElementById("curr_total_max_expense") != null ? document.getElementById("curr_total_max_expense").dataset.val : null,  
+    "daily_max_expense": document.getElementById("curr_daily_max_expense") != null ? document.getElementById("curr_daily_max_expense").dataset.val : null, 
+    "food_max_expense": document.getElementById("curr_food_max_expense") != null ? document.getElementById("curr_food_max_expense").dataset.val : null, 
+    "entertainment_max_expense": document.getElementById("curr_entertainment_max_expense") != null ? document.getElementById("curr_entertainment_max_expense").dataset.val : null,  
+    "home_max_expense": document.getElementById("curr_home_max_expense") != null ? document.getElementById("curr_home_max_expense").dataset.val : null, 
+    "car_max_expense": document.getElementById("curr_car_max_expense") != null ? document.getElementById("curr_car_max_expense").dataset.val : null, 
+  }
+  var currentData = {
+    "total_max_expense":total_max_expense, 
+    "daily_max_expense":daily_max_expense, 
+    "food_max_expense":food_max_expense, 
+    "entertainment_max_expense":entertainment_max_expense, 
+    "home_max_expense":home_max_expense, 
+    "car_max_expense":car_max_expense
+  }
+
+  let temp = document.getElementById("curr_end_month_saved")
+  if(temp != null){
+    if(board_end_month_saved >= currentData_end_month_saved){
+      temp.insertAdjacentHTML('beforeend','<span class="thumb-down-icon" title="Current value: '+currentData_end_month_saved+'"></span>');
+    }else{
+      temp.insertAdjacentHTML('beforeend','<span class="thumb-up-icon" title="Current value: '+currentData_end_month_saved+'"></span>');
+    }
+  }
+  
+  Object.keys(boardGoals).forEach(key => {
+    let temp = document.getElementById("curr_"+key+"")
+    let htmlGood = '<span class="thumb-up-icon" title="Current value: '+currentData[key]+'"></span>';
+    let htmlBad = '<span class="thumb-down-icon" title="Current value: '+currentData[key]+'"></span>';
+    if(temp != null){
+      if(boardGoals[key] >= currentData[key]){
+        temp.insertAdjacentHTML('beforeend',htmlGood);
+      }else{
+        temp.insertAdjacentHTML('beforeend',htmlBad);
+      }
+    }
+  });
+}
+

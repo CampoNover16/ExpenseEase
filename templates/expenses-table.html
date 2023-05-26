@@ -2,7 +2,7 @@
     <div class="tabs-holder">
         <button class="switch-tab active" onclick="switchTab(1)" data-tab="1" id="load-data">Expenses</button>
         <button class="switch-tab" onclick="switchTab(2)" data-tab="2">Month planner</button>
-        <button class="switch-tab" onclick="switchTab(3)" data-tab="3">Your goals</button>
+        <button class="switch-tab" onclick="switchTab(3), checkUserGoals()" data-tab="3" id="goals-tab-switch">Your goals</button>
         <button class="switch-tab" onclick="switchTab(4)" data-tab="4">Raports</button>
     </div>
     <div class="tab tab1 active">
@@ -65,26 +65,27 @@
     <div class="tab tab3">
       <div class="expenses-goals">
         {% if board and goals_data['end_month_saved']: %}
-        <div>I want to save <strong style="color: var(--accent);">{{goals_data['end_month_saved']}} pln</strong> at the end of the month.</div>
+        <div id="curr_end_month_saved" style="display: flex; gap: 5px;" data-val="{{goals_data['end_month_saved']}}">I want to save <strong style="color: var(--accent);">{{goals_data['end_month_saved']}} pln</strong> at the end of the month. </div>
         {% endif %}
         {% if board and goals_data['total_max_expense']: %}
-        <div>I don't want to exceed expenses up to <strong style="color: var(--accent);">{{goals_data['total_max_expense']}} pln</strong>.</div>
+        <div id="curr_total_max_expense" style="display: flex; gap: 5px;" data-val="{{goals_data['total_max_expense']}}">I don't want to exceed expenses up to <strong style="color: var(--accent);">{{goals_data['total_max_expense']}} pln</strong>.</div>
         {% endif %}
         {% if board and goals_data['daily_max_expense']: %}
-        <div>I don't want to exceed the daily expenses over <strong style="color: var(--accent);">{{goals_data['daily_max_expense']}} pln</strong>.</div>
+        <div id="curr_daily_max_expense" style="display: flex; gap: 5px;" data-val="{{goals_data['daily_max_expense']}}">I don't want to exceed the daily expenses over <strong style="color: var(--accent);">{{goals_data['daily_max_expense']}} pln</strong>.</div>
         {% endif %}
         {% if board and goals_data['food_max_expense']: %}
-        <div>I don't want to exceed the expenses in the <strong style="color: var(--accent);">Food</strong> category over <strong style="color: var(--accent);">{{goals_data['food_max_expense']}} pln</strong>.</div>
+        <div id="curr_food_max_expense" style="display: flex; gap: 5px;" data-val="{{goals_data['food_max_expense']}}">I don't want to exceed the expenses in the <strong style="color: var(--accent);">Food</strong> category over <strong style="color: var(--accent);">{{goals_data['food_max_expense']}} pln</strong>.</div>
         {% endif %}
         {% if board and goals_data['entertainment_max_expense']: %}
-        <div>I don't want to exceed the expenses in the <strong style="color: var(--accent);">Entertainment</strong> category over <strong style="color: var(--accent);">{{goals_data['entertainment_max_expense']}} pln</strong>.</div>
+        <div id="curr_entertainment_max_expense" style="display: flex; gap: 5px;" data-val="{{goals_data['entertainment_max_expense']}}">I don't want to exceed the expenses in the <strong style="color: var(--accent);">Entertainment</strong> category over <strong style="color: var(--accent);">{{goals_data['entertainment_max_expense']}} pln</strong>.</div>
         {% endif %}
         {% if board and goals_data['home_max_expense']: %}
-        <div>I don't want to exceed the expenses in the <strong style="color: var(--accent);">Home</strong> category over <strong style="color: var(--accent);">{{goals_data['home_max_expense']}} pln</strong>.</div>
+        <div id="curr_home_max_expense" style="display: flex; gap: 5px;" data-val="{{goals_data['home_max_expense']}}">I don't want to exceed the expenses in the <strong style="color: var(--accent);">Home</strong> category over <strong style="color: var(--accent);">{{goals_data['home_max_expense']}} pln</strong>.</div>
         {% endif %}
         {% if board and goals_data['car_max_expense']: %}
-        <div>I don't want to exceed the expenses in the <strong style="color: var(--accent);">Car</strong> category over <strong style="color: var(--accent);">{{goals_data['car_max_expense']}} pln</strong>.</div>
+        <div id="curr_car_max_expense" style="display: flex; gap: 5px;" data-val="{{goals_data['car_max_expense']}}">I don't want to exceed the expenses in the <strong style="color: var(--accent);">Car</strong> category over <strong style="color: var(--accent);">{{goals_data['car_max_expense']}} pln</strong>.</div>
         {% endif %}
+        <div>Date of last goals modifications: <strong style="color: var(--accent);">{{goals_data['modified']}}</strong></div>
       </div>
     </div>
     <div class="tab tab4" id="raport_generator">
@@ -96,7 +97,7 @@
         <div class="d-flex justify-content-center" style="gap: 25px;">
           <div style="width: 250px;">
             <label for="date-select">Date</label>
-            <select class="form-select" aria-label="Default select example" name="date-select" id="raport-date-select">
+            <select class="form-select" aria-label="Default select example" name="date-select" id="raport-date-select" style="background-color: var(--secondary);color: white;">
               <option value="select-default" disabled selected> --- Select month + year --- </option>
             </select>
           </div>

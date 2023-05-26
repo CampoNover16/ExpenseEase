@@ -320,6 +320,8 @@ body{
     align-items: center;
     overflow-y: scroll;
     height: 350px;
+    font-size: 18px;
+    gap: 25px;
 }
 
 .expense-element{
@@ -436,4 +438,32 @@ body{
 ::-webkit-scrollbar-thumb {
     background: var(--accent); 
     border-radius: 15px;
+}
+
+.thumb-up-icon{
+    background-image: url('../images/thumb-up-icon.svg');
+    background-repeat: no-repeat;
+    background-size: contain;
+    width: 25px;
+    height: 25px;
+}
+
+.thumb-down-icon{
+    background-image: url('../images/thumb-down-icon.svg');
+    background-repeat: no-repeat;
+    background-size: contain;
+    width: 25px;
+    height: 25px;
+}
+
+.thumb-up-icon:hover,
+.thumb-down-icon:hover{
+    cursor: pointer;
+}
+
+.thumb-down-icon:hover{
+    filter: drop-shadow(0 0 0.25rem #ff2825);
+}
+.thumb-up-icon:hover{
+    filter: drop-shadow(0 0 0.25rem #00b341);
 }

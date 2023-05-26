@@ -35,7 +35,7 @@ def index():
             second_user = cursor.fetchone()
             if second_user:
                 users += 1
-            cursor.execute("SELECT end_month_saved, total_max_expense, daily_max_expense, food_max_expense, entertainment_max_expense, home_max_expense, car_max_expense FROM board_goals WHERE board_id=%s and month=%s",(user_board[0],datetime.now().month))
+            cursor.execute("SELECT end_month_saved, total_max_expense, daily_max_expense, food_max_expense, entertainment_max_expense, home_max_expense, car_max_expense, modified FROM board_goals WHERE board_id=%s and month=%s",(user_board[0],datetime.now().month))
             goalsBoardData = cursor.fetchone()
             if goalsBoardData:
                 goalsData = {
@@ -45,12 +45,13 @@ def index():
                     'food_max_expense':goalsBoardData[3],
                     'entertainment_max_expense':goalsBoardData[4],
                     'home_max_expense':goalsBoardData[5],
-                    'car_max_expense':goalsBoardData[6]
+                    'car_max_expense':goalsBoardData[6],
+                    'modified': goalsBoardData[7].strftime("%d/%m/%Y")
                 }
 
         mysql.connection.commit()
         cursor.close()
-    return render_template('index.html', user=session, board=user_board, second_user = second_user, users_count = users, goals_data=goalsData)
+    return render_template('index.html', user=session, board=user_board, second_user=second_user, users_count=users, goals_data=goalsData)
 
 @app.route('/register', methods=['POST', 'GET'])
 def register():
