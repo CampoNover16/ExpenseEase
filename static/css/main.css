@@ -324,29 +324,59 @@ body{
     gap: 25px;
 }
 
+.exoense-list-legend{
+    display: flex;
+    align-items: center;
+    background-color: var(--secondary);
+    border-radius: 15px;
+    width: 90%;
+    height: 25px;
+    margin-bottom: 10px;
+    margin-left: 2rem;
+}
+.exoense-list-legend_name,.exoense-list-legend_category,.exoense-list-legend_date,.exoense-list-legend_price,.exoense-list-legend_action{
+    display: flex;
+    justify-content: center;
+    margin: 0 !important;
+}
+
+.exoense-list-legend_name{ width: 48% ;}
+.exoense-list-legend_category{width: 16%;}
+.exoense-list-legend_date{width: 10%;}
+.exoense-list-legend_price{width: 11%;}
+.exoense-list-legend_action{width: 15%;}
+
 .expense-element{
     display: flex;
     flex-direction: row;
     background-color: var(--secondary);
     border-radius: 15px;
-    width: 90%;
+    width: 95%;
 
-    margin-bottom: 20px;
+    margin-bottom: 10px;
+    height: 50px;
 }
 
 .expense-element_name{
     display: flex;
-    flex-direction: column;
-    width: 50%;
-    padding: 5px 0 5px 10px;
-    
+    width: 64%;
+    align-items: center;
+    padding-left: 10px;
 }
 
 .expense-element_name_name{
     margin-bottom: 0 !important;
+    display: flex;
+    width: 48%;
+    align-items: center;
+    padding-left: 10px;
 }
 
 .expense-element_name_category{
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    width: 16%;
     color: var(--accent);
     margin: 0 !important;
 }
@@ -355,29 +385,33 @@ body{
     display: flex;
     justify-content: center;
     align-items: center;
-    width: 15%;
+    width: 10%;
     font-weight: 600;
 }
 
 .expense-element_date{
     display: flex;
-    align-items: end;
-    width: 15%;
+    align-items: center;
+    width: 11%;
     color: var(--accent);
-    padding-bottom: 5px;
+    margin-left: 5px;
 }
 
 .expense-element_options{
     display: flex;
-    width: 20%;
+    justify-content: space-around;
+    align-items: center;
+    width: 15%;
 }
 
 .change-expense-btn{
     display: flex;
     background-color: #00b341;
-    width: 50%;
+    width: 40px;
+    height: 40px;
     justify-content: center;
     align-items: center;
+    border-radius: 10px 10px 10px 10px;
 }
 
 .change-expense-btn:hover{
@@ -388,23 +422,22 @@ body{
     background-image: url('../images/update-icon.svg');
     background-repeat: no-repeat;
     background-size: contain;
-    width: 36px;
-    height: 36px;
+    width: 24px;
+    height: 24px;
 }
 
 .change-expense-btn:hover .change-icon{
     background-image: url('../images/update-active-icon.svg');
     background-repeat: no-repeat;
     background-size: contain;
-    width: 36px;
-    height: 36px;
 }
 
 .delete-expense-btn{
     display: flex;
     background-color: #ff2825;
-    width: 50%;
-    border-radius: 0 15px 15px 0;
+    width: 40px;
+    height: 40px;
+    border-radius: 10px 10px 10px 10px;
     justify-content: center;
     align-items: center;
 
@@ -418,16 +451,14 @@ body{
     background-image: url('../images/trash-icon.svg');
     background-repeat: no-repeat;
     background-size: contain;
-    width: 36px;
-    height: 36px;
+    width: 24px;
+    height: 24px;
 }
 
 .delete-expense-btn:hover .delete-icon{
     background-image: url('../images/trash-active-icon.svg');
     background-repeat: no-repeat;
     background-size: contain;
-    width: 36px;
-    height: 36px;
 }
 
 .add-expense-holder{

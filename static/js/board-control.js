@@ -533,10 +533,8 @@ function donutGraphCreate(items) {
 
 function generateListItem(item) {
   return `<li class="expense-element" id="element-${item.id}">
-      <div class="expense-element_name">
-        <h3 class="expense-element_name_name">${item.name}</h3>
+        <h5 class="expense-element_name_name">${item.name}</h5>
         <p class="expense-element_name_category">${item.category}</p>
-      </div>
       <div class="expense-element_date">
         ${item.date}
       </div>
@@ -544,8 +542,8 @@ function generateListItem(item) {
       ${item.price} PLN
     </div>
       <div class="expense-element_options">
-        <button class="change-expense-btn" onClick="loadExpenseHandler(${item.id})" data-bs-toggle="modal" data-bs-target="#modalChangeCenter""><div class="change-icon"></div></button>
-        <button class="delete-expense-btn" onClick="deleteExpenseHandler(${item.id})"><div class="delete-icon"></div></button>
+        <button class="change-expense-btn" title="Change Expense" onClick="loadExpenseHandler(${item.id})" data-bs-toggle="modal" data-bs-target="#modalChangeCenter""><div class="change-icon"></div></button>
+        <button class="delete-expense-btn" title="Delete Expense" onClick="deleteExpenseHandler(${item.id})"><div class="delete-icon"></div></button>
       </div>
   </li>`;
 }
